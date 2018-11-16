@@ -24,9 +24,33 @@ popularidad("HunterXHunter",3).
 popularidad("Hamtaro",10).
 popularidad("Full Metal Alchemist",1).
 
+% Dado un arreglo imprime cada elemento en una linea
 printByLine([]).
 printByLine([X|List]) :- writeln(X), printByLine(List).
 
+
+printAnime([]).
+printAnime([(X,Y)|List]) :- writeln(X), printAnime(List).
+
+%Pasa una lista de strings todos a minuscula
+toLower([],[]).
+toLower([X|Xs],[I|R]) :- string_lower(X, I), toLower(Xs, R).
+
+% Realiza el query sobre el rating de todos los anime y los imprime en orden decreciente
 orderBy(rating) :- findall((Y,X),rating(Y,X), List), sort(2,  @>=, List,  Sorted), printByLine(Sorted).
+
+% Realiza el query sobre la popularidad de todos los anime y los imprime en orden decreciente
 orderBy(popularidad) :- findall((Y,X),popularidad(Y,X), List), sort(2,  @>=, List,  Sorted), printByLine(Sorted).
  
+%Leer input el usuario y llama a la lista de respuestas
+leerRespuesta :- readln(X), nl, respuesta(X).
+
+%Queries sobre rating
+respuesta([cuales,son,los,mejores,rating,?]):- findall((X,_),rating(X,5), List), writeln("Listado de animes con rating 5: "), printAnime(List).
+
+
+%Queries sobre popularidad
+respuesta([cuales,son,los,mas,populares,?]):- findall((X,_),popularidad(X,10), List), writeln("Listado de animes bastante conocidos: "), printAnime(List).
+
+respuesta(X, Y):- write(X), write(--), write(Y).
+
