@@ -55,10 +55,19 @@ respuesta([que,animes,tienen,rating,Q,?]):- checkRange(Q,5), findall((X,_),ratin
 										writeln(Salida), printAnime(List).
 respuesta([que,animes,tienen,rating,Q,?]):- writeln("Disculpa, pero solo me han hablado de ratings entre 1 y 5. Intenta con uno de estos valores.").
 
-
-
 %Queries sobre popularidad
-respuesta([cuales,son,los,mas,populares,?]):- findall((X,_),popularidad(X,10), List), writeln("Listado de animes bastante conocidos: "), printAnime(List).
+respuesta([cuales,son,los,mas,populares,?]):- findall((X,_),popularidad(X,10), List), writeln("Listado de animes bastante conocidos: "),
+											  printAnime(List).
+respuesta([cuales,son,los,menos,populares,?]):- findall((X,_),(popularidad(X,Y), (Y=1; Y=2)), List), writeln("Listado de animes muy poco conocidos: "),
+											  printAnime(List).
+respuesta([que,animes,son,poco,conocidos,?]):- findall((X,_),(popularidad(X,Y), (Y=3; Y=4; Y=5)), List), writeln("Listado de animes poco conocidos: "), 
+											  printAnime(List).
+respuesta([que,animes,son,conocidos,?]):- findall((X,_),(popularidad(X,Y), (Y=6; Y=7)), List), writeln("Listado de animes conocidos: "), 
+											  printAnime(List).
+respuesta([que,animes,son,muy,conocidos,?]):- findall((X,_),(popularidad(X,Y), (Y=8; Y=9)), List), writeln("Listado de animes muy conocidos: "),
+											  printAnime(List).
 
-respuesta(X, Y):- write(X), write(--), write(Y).
 
+
+%RESPUESTAS A PREGUNTAS GENERICAS
+% Quizas quisiste preguntar por los animes de cierta popularidad?
