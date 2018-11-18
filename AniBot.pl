@@ -69,13 +69,17 @@ respuesta([que,animes,son,conocidos,?]):- findall((X,_),(popularidad(X,Y), (Y=6;
 respuesta([que,animes,son,muy,conocidos,?]):- findall((X,_),(popularidad(X,Y), (Y=8; Y=9)), List), writeln("Listado de animes muy conocidos: "),
 											  printAnime(List).
 
-%Queries sobre categoria
+%Dada una lista de generos en formato [articulo,genero,...] devuelve una lista solo con generos
 separarGeneros([_, X, Y| Generos], [X|R]):-  Y=, , separarGeneros(Generos,R).
 separarGeneros([_, X| Generos], [X|R]):- separarGeneros(Generos,R).
 separarGeneros([],[]).
  
+buscarPorGenero([X|T],L) :- atom_string(X,Q),writeln(Q), findall((A,G), (generoAnime(A,G), member(Q,G)), Respuesta), printAnime(Respuesta), 
+							buscarPorGenero(T,L).
+buscarPorGenero([],[]).
 
-respuesta([me,gusta|Generos]) :- separarGeneros(Generos, Listado), writeln(Listado).
+
+respuesta([me,gusta|Generos]) :- separarGeneros(Generos, Listado), writeln("Segun el género te podemos recomendar:\n"), buscarPorGenero(Listado,Respuesta).
 
 
 respuesta([salir]) :- halt.
