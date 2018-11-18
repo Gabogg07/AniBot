@@ -30,7 +30,7 @@ printByLine([X|List]) :- writeln(X), printByLine(List).
 
 
 printAnime([]).
-printAnime([(X,Y)|List]) :- atom_concat(" - ",X, Anime), writeln(Anime), printAnime(List).
+printAnime([(X,_)|List]) :- atom_concat(" - ",X, Anime), writeln(Anime), printAnime(List).
 
 %Pasa una lista de strings todos a minuscula
 toLower([],[]).
@@ -41,9 +41,11 @@ orderBy(rating) :- findall((Y,X),rating(Y,X), List), sort(2,  @>=, List,  Sorted
 
 % Realiza el query sobre la popularidad de todos los anime y los imprime en orden decreciente
 orderBy(popularidad) :- findall((Y,X),popularidad(Y,X), List), sort(2,  @>=, List,  Sorted), printByLine(Sorted).
+
  
 %Leer input el usuario y llama a la lista de respuestas
 leerRespuesta :- readln(X), nl, respuesta(X), leerRespuesta.
+
 
 %Verifica que un entero este entre 1 y X
 checkRange(X,Top) :- X @=< Top , 1 @=< X.
@@ -53,7 +55,7 @@ respuesta([cuales,son,los,mejores,rating,?]):- findall((X,_),rating(X,5), List),
 respuesta([cuales,son,los,peores,rating,?]):- findall((X,_),rating(X,1), List), writeln("Listado de animes con rating 1: "), printAnime(List).
 respuesta([que,animes,tienen,rating,Q,?]):- checkRange(Q,5), findall((X,_),rating(X,Q), List), atom_concat("Listado de animes con rating ", Q, Salida), 
 										writeln(Salida), printAnime(List).
-respuesta([que,animes,tienen,rating,Q,?]):- writeln("Disculpa, pero solo me han hablado de ratings entre 1 y 5. Intenta con uno de estos valores.").
+respuesta([que,animes,tienen,rating,_,?]):- writeln("Disculpa, pero solo me han hablado de ratings entre 1 y 5. Intenta con uno de estos valores.").
 
 %Queries sobre popularidad
 respuesta([cuales,son,los,mas,populares,?]):- findall((X,_),popularidad(X,10), List), writeln("Listado de animes bastante conocidos: "),
@@ -67,7 +69,15 @@ respuesta([que,animes,son,conocidos,?]):- findall((X,_),(popularidad(X,Y), (Y=6;
 respuesta([que,animes,son,muy,conocidos,?]):- findall((X,_),(popularidad(X,Y), (Y=8; Y=9)), List), writeln("Listado de animes muy conocidos: "),
 											  printAnime(List).
 
+%Queries sobre categoria
+separarGeneros([_, X, Y| Generos], [X|R]):-  Y=, , separarGeneros(Generos,R).
+separarGeneros([_, X| Generos], [X|R]):- separarGeneros(Generos,R).
+separarGeneros([],[]).
+ 
+
+respuesta([me,gusta|Generos]) :- separarGeneros(Generos, Listado), writeln(Listado).
 
 
+respuesta([salir]) :- halt.
 %RESPUESTAS A PREGUNTAS GENERICAS
 % Quizas quisiste preguntar por los animes de cierta popularidad?
