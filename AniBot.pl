@@ -70,7 +70,7 @@ respuesta([que,animes,son,muy,conocidos,?]):- findall((X,_),(popularidad(X,Y), (
 											  printAnime(List).
 
 %Dada una lista de generos en formato [articulo,genero,...] devuelve una lista solo con generos
-separarGeneros([_, X, Y| Generos], [X|R]):-  Y=, , separarGeneros(Generos,R).
+separarGeneros([_, X, Y| Generos], [X|R]):-  (Y=,; Y=y) , separarGeneros(Generos,R).
 separarGeneros([_, X| Generos], [X|R]):- separarGeneros(Generos,R).
 separarGeneros([],[]).
  
@@ -84,7 +84,6 @@ filterByList([(X,Y)|T], L1, [(X,Y)|R]) :- member((X,_),L1), filterByList(T, L1, 
 filterByList([X|T], L1, R) :- filterByList(T,L1,R).
 filterByList([], _, []).  
 
-prueba :- findall((A,G), (generoAnime(A,G), member("Aventura",G) ), Query),  orderBy(rating, Sorted), filterByList(Sorted, Query, Respuesta), writeln(Respuesta).
 
 respuesta([me,gusta|Generos]) :- separarGeneros(Generos, Listado), writeln("Segun el género te podemos recomendar:\n"), buscarPorGenero(Listado,Respuesta).
 
