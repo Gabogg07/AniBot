@@ -37,10 +37,10 @@ toLower([],[]).
 toLower([X|Xs],[I|R]) :- string_lower(X, I), toLower(Xs, R).
 
 % Realiza el query sobre el rating de todos los anime y los imprime en orden decreciente
-orderBy(rating) :- findall((Y,X),rating(Y,X), List), sort(2,  @>=, List,  Sorted), printByLine(Sorted).
+orderBy(rating, Sorted) :- findall((Y,X),rating(Y,X), List), sort(2,  @>=, List,  Sorted).
 
 % Realiza el query sobre la popularidad de todos los anime y los imprime en orden decreciente
-orderBy(popularidad) :- findall((Y,X),popularidad(Y,X), List), sort(2,  @>=, List,  Sorted), printByLine(Sorted).
+orderBy(popularidad, Sorted) :- findall((Y,X),popularidad(Y,X), List), sort(2,  @>=, List,  Sorted).
 
  
 %Leer input el usuario y llama a la lista de respuestas
@@ -75,11 +75,16 @@ separarGeneros([_, X| Generos], [X|R]):- separarGeneros(Generos,R).
 separarGeneros([],[]).
  
 %Dada una lista de generos, imprime para cada uno su nombre y los animes asociados.
-buscarPorGenero([X|T],L) :- atom_string(X,Q),writeln(Q), genero(Q), findall((A,G), (generoAnime(A,G), member(Q,G)), Respuesta), printAnime(Respuesta), 
+buscarPorGenero([X|T],L) :- atom_string(X,Q),writeln(Q), genero(Q), findall((A,G), (generoAnime(A,G), member(Q,G)), Lista), orderBy(rating, Sorted), filterByList(Sorted, Lista, Respuesta), printAnime(Respuesta), 
 							buscarPorGenero(T,L), !.
 buscarPorGenero([X|T],L) :- atom_string(X,Q),write('Lo siento no tengo información sobre '), writeln(Q), buscarPorGenero(T,L).
 buscarPorGenero([],[]).
 
+filterByList([(X,Y)|T], L1, [(X,Y)|R]) :- member((X,_),L1), filterByList(T, L1, R), !.
+filterByList([X|T], L1, R) :- filterByList(T,L1,R).
+filterByList([], _, []).  
+
+prueba :- findall((A,G), (generoAnime(A,G), member("Aventura",G) ), Query),  orderBy(rating, Sorted), filterByList(Sorted, Query, Respuesta), writeln(Respuesta).
 
 respuesta([me,gusta|Generos]) :- separarGeneros(Generos, Listado), writeln("Segun el género te podemos recomendar:\n"), buscarPorGenero(Listado,Respuesta).
 
