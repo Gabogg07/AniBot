@@ -55,7 +55,7 @@ respuesta([cuales,son,los,mejores,rating,?]):- findall((X,_),rating(X,5), List),
 respuesta([cuales,son,los,peores,rating,?]):- findall((X,_),rating(X,1), List), writeln("Listado de animes con rating 1: "), printAnime(List).
 respuesta([que,animes,tienen,rating,Q,?]):- checkRange(Q,5), findall((X,_),rating(X,Q), List), atom_concat("Listado de animes con rating ", Q, Salida), 
 										writeln(Salida), printAnime(List).
-respuesta([que,animes,tienen,rating,_,?]):- writeln("Disculpa, pero solo me han hablado de ratings entre 1 y 5. Intenta con uno de estos valores.").
+respuesta([que,animes,tienen,rating,_,?]):- writeln("Disculpa, peros olo me han hablado de ratings entre 1 y 5. Intenta con uno de estos valores.").
 
 %Queries sobre popularidad
 respuesta([cuales,son,los,mas,populares,?]):- findall((X,_),popularidad(X,10), List), writeln("Listado de animes bastante conocidos: "),
@@ -74,8 +74,10 @@ separarGeneros([_, X, Y| Generos], [X|R]):-  Y=, , separarGeneros(Generos,R).
 separarGeneros([_, X| Generos], [X|R]):- separarGeneros(Generos,R).
 separarGeneros([],[]).
  
-buscarPorGenero([X|T],L) :- atom_string(X,Q),writeln(Q), findall((A,G), (generoAnime(A,G), member(Q,G)), Respuesta), printAnime(Respuesta), 
-							buscarPorGenero(T,L).
+%Dada una lista de generos, imprime para cada uno su nombre y los animes asociados.
+buscarPorGenero([X|T],L) :- atom_string(X,Q),writeln(Q), genero(Q), findall((A,G), (generoAnime(A,G), member(Q,G)), Respuesta), printAnime(Respuesta), 
+							buscarPorGenero(T,L), !.
+buscarPorGenero([X|T],L) :- atom_string(X,Q),write('Lo siento no tengo información sobre '), writeln(Q), buscarPorGenero(T,L).
 buscarPorGenero([],[]).
 
 
