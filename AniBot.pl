@@ -1,28 +1,54 @@
-anime(X) :- member(X,["Dragon Ball", "Naruto", "Bleach", "HunterXHunter", "Hamtaro", "Full Metal Alchemist"]).
+base_de_datos([
+    % Nombre anime, rating, popularidad, genero
+    % Traidos por los profesores
+    ["Dragon Ball", 3, 7, ["Shounen","Aventura"]],
+    ["Naruto", 1, 5, ["Shounen"]],
+    ["Bleach", 4, 8, ["Shounen", "Sobrenatural"]],
+    ["HunterXHunter", 5, 3, ["Seinen", "Aventura"]],
+    ["Hamtaro", 2, 10, ["Kodomo"]],
+    ["Full Metal Alchemist: Brotherhood", 4, 1, ["Shounen", "Magia"]],
+    % Llenados por nosotros
+    ["Death Note", 4, 10, ["Sobrenatural", "Mystery"]],
+    ["Attack on Titan", 5, 10, ["Shounen", "Aventura"]],
+    ["Code Geass", 5, 10, ["Mecha", "Mystery", "Shounen"]],
+    ["Fairy Tail", 3, 8, ["Magia", "Accion", "Aventura"]],
+    ["One Piece", 4, 7, ["Aventura", "Accion"]],
+    ["One Punch Man", 5, 10, ["Comedia", "Accion", "Sci-Fi", "Sobrenatural"]],
+    ["Akame ga Kill!", 3, 7, ["Accion", "Drama", "Fantasia", "Shounen"]],
+    ["Pokemon", 5, 10, ["Comedia", "Accion", "Fantasia", "Aventura"]],
+    ["Noragami", 3, 6, ["Aventura", "Accion", "Fantasia", "Shounen"]],
+    ["Ao no Exorcist", 2, 5, ["Mystery", "Drama"]]
+]).
 
-genero(X) :- member(X,["Aventura", "Shoujo", "Shounen", "Kodomo", "Seinen", "Josei", "Ficción",
-                    "Fantasía", "Mecha", "Sobrenatural", "Magia", "Gore"]).
+anime(X) :- base_de_datos(L), member([X, _, _, _], L).
 
-generoAnime("Naruto",["Shounen","Aventura"]).
-generoAnime("Dragon Ball",["Shounen"]).
-generoAnime("Bleach",["Shounen", "Sobrenatural"]).
-generoAnime("HunterXHunter",["Seinen", "Aventura"]).
-generoAnime("Hamtaro",["Kodomo"]).
-generoAnime("Full Metal Alchemist",["Shounen", "Magia"]).
+generomap([], []).
+generomap([[_, _, _, X]], [X]) :- !.
+generomap([[_, _, _, X]|Rest], [X|List]) :- generomap(Rest, List).
 
-rating("Dragon Ball",3).
-rating("Naruto",1).
-rating("Bleach",4).
-rating("HunterXHunter",5).
-rating("Hamtaro",2).
-rating("Full Metal Alchemist",4).
+unique([], []).
+unique([X], [X]) :- !.
+unique([X,X|R], Rest) :- unique([X|R], Rest).
+unique([H,Y | T], [H|T1]):- Y \= H, unique( [Y|T], T1).
 
-popularidad("Dragon Ball",7).
-popularidad("Naruto",5).
-popularidad("Bleach",8).
-popularidad("HunterXHunter",3).
-popularidad("Hamtaro",10).
-popularidad("Full Metal Alchemist",1).
+
+% todos_los_generos(X) :-
+%     findall
+genero(X) :-
+    base_de_datos(L),
+    generomap(L, L0),
+    append(L0, L1),
+    sort(L1, L2),
+    member(X, L2).
+
+generoAnime(X, L) :-
+    base_de_datos(List), member([X, _, _, L], List).
+
+rating(X, L) :-
+    base_de_datos(List), member([X, L, _, _], List).
+
+popularidad(X, L):-
+    base_de_datos(List), member([X, _, L, _], List).
 
 % Dado un arreglo imprime cada elemento en una linea
 printByLine([]).
@@ -43,8 +69,7 @@ toLower([X|Xs],[I|R]) :- string_lower(X, I), toLower(Xs, R).
 
 % Realiza el query sobre el rating de todos los anime y los imprime en orden decreciente
 orderBy(rating, Sorted) :-
-    findall((Y,X),
-    rating(Y,X), List),
+    findall((Y,X), rating(Y,X), List),
     sort(2,  @>=, List,  Sorted).
 
 % Realiza el query sobre la popularidad de todos los anime y los imprime en orden decreciente
