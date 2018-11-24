@@ -221,3 +221,10 @@ respuesta([salir]) :-
     halt.
 %RESPUESTAS A PREGUNTAS GENERICAS
 % Quizas quisiste preguntar por los animes de cierta popularidad?
+
+:- writeln("¡Hola! Mi nombre es Anibot").
+:- writeln("Se mucho sobre animes, pero puedo aprender por lo que me vayas pidiendo").
+:- writeln("¿Que necesitas?").
+:- prompt('|: ', '> ').
+
+:- leerRespuesta.
