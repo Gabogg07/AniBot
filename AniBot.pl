@@ -141,7 +141,7 @@ respuesta([que, animes, tienen, rating, Q, ?]) :-
     writeln(Salida),
     printAnime(List).
 respuesta([que, animes, tienen, rating, _, ?]) :-
-    writeln("Disculpa, peros olo me han hablado de ratings entre 1 y 5. Intenta con uno de estos valores.").
+    writeln("Disculpa, pero solo me han hablado de ratings entre 1 y 5. Intenta con uno de estos valores.").
 
 %Queries sobre popularidad
 respuesta([cuales, son, los, mas, populares, ?]) :-
