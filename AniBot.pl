@@ -6,7 +6,7 @@ base_de_datos([
     ["Bleach", 4, 8, ["Shounen", "Sobrenatural"]],
     ["HunterXHunter", 5, 3, ["Seinen", "Aventura"]],
     ["Hamtaro", 2, 10, ["Kodomo"]],
-    ["Full Metal Alchemist: Brotherhood", 4, 1, ["Shounen", "Magia"]],
+    ["Full Metal Alchemist : Brotherhood", 4, 1, ["Shounen", "Magia"]],
     % Llenados por nosotros
     ["Death Note", 4, 10, ["Sobrenatural", "Mystery"]],
     ["Attack on Titan", 5, 10, ["Shounen", "Aventura"]],
@@ -63,6 +63,10 @@ printAnime([(X,_)|List]) :-
     writeln(Anime),
     printAnime(List).
 
+printListItems([]).
+printListItems([X]):- writeln(X).
+printListItems([X|T]):- write(X), write(', '), printListItems(T).
+
 %Pasa una lista de strings todos a minuscula
 toLower([],[]).
 toLower([X|Xs],[I|R]) :- string_lower(X, I), toLower(Xs, R).
@@ -112,6 +116,9 @@ filterByList([(X,Y)|T], L1, [(X,Y)|R]) :- member((X,_),L1), filterByList(T, L1, 
 filterByList([_|T], L1, R) :- filterByList(T,L1,R).
 filterByList([], _, []).  
 
+%Dada una lista se introduce entre sus elementos <Elem> y retorna el string resultante
+unirCon(Entrada, Elem, String) :- atomic_list_concat(Entrada, Elem, Atom), atom_string(Atom, String).
+
 
 calcularRatingPopularidad([(X,_)|T], [(X,S)|L]) :- popularidad(X,P), rating(X,R), S is R+P, calcularRatingPopularidad(T,L).
 calcularRatingPopularidad([],[]).
@@ -134,7 +141,7 @@ respuesta([que, animes, tienen, rating, Q, ?]) :-
     writeln(Salida),
     printAnime(List).
 respuesta([que, animes, tienen, rating, _, ?]) :-
-    writeln("Disculpa, peros olo me han hablado de ratings entre 1 y 5. Intenta con uno de estos valores.").
+    writeln("Disculpa, pero solo me han hablado de ratings entre 1 y 5. Intenta con uno de estos valores.").
 
 %Queries sobre popularidad
 respuesta([cuales, son, los, mas, populares, ?]) :-
@@ -216,6 +223,14 @@ respuesta([muestrame, animes, de, X, por, Y, y, Z]) :-
     calcularRatingPopularidad(Animes, Temp),
     sort(2, @>=, Temp, Sorted),
     printAnime(Sorted).
+
+%Query sobre datos de un animes
+respuesta([conoces,sobre|X]) :- unirCon(X, ' ', Nombre), anime(Nombre), write('Si, esto es lo que se sobre '), 
+                                writeln(Nombre), base_de_datos(L), member([Nombre, R, P, G], L),
+                                write('Tiene rating '), write(R), write(', popularidad '), write(P),
+                                write(' y su genero entra en '), printListItems(G),!.
+respuesta([conoces,sobre|_]) :- writeln('Lo siento, aca es donde German te pregunta y agrega a la DB').
+
 
 respuesta([salir]) :-
     halt.

@@ -11,5 +11,10 @@ cuales son los menos populares?
 que animes son poco conocidos?
 que animes son conocidos?
 que animes son muy conocidos?
-me gusta el Aventura, el Kodomo, la Magia, el Seinen, el Shounen y lo Sobrenatural
+me gusta el Aventura, el Kodomo, la Magia, el Seinen, el Shounen y lo Sobrenatural (<algo> <genero>)
+muestrame animes de <genero> por popularidad
+muestrame animes de <genero> por rating
+muestrame animes de <genero> por popularidad y rating
+muestrame animes de <genero> por rating y popularidad
+conoces sobre <anime>
 salir
