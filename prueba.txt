@@ -17,4 +17,19 @@ muestrame animes de <genero> por rating
 muestrame animes de <genero> por popularidad y rating
 muestrame animes de <genero> por rating y popularidad
 conoces sobre <anime>
+-- Sea categoria entendida como:
+	interesante -- rating entre 4 y 5
+	normal      -- rating igual a 3
+	aburrido    -- rating entre 1 y 2
+
+	,popularidad como:
+	muy poco conocido -- popularidad entre 1 y 2
+	poco conocido     -- popularidad entre 3 y 5
+	conocido          -- popularidad entre 6 y 7
+	muy conocido      -- popularidad entre 8 y 9
+	bastante conocido -- popularidad igual a 10
+
+	y no se puede usar categoria o popularidad en ambos casos : 
+
+quiero ver un anime <categoria|popularidad> y <categoria|popularidad>
 salir
