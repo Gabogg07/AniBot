@@ -13,7 +13,28 @@ base_de_datos([
 
 anime(X) :- base_de_datos(L), member([X, _, _, _], L).
 
+generomap([], []).
+generomap([[_, _, _, X]], [X]) :- !.
+generomap([[_, _, _, X]|Rest], [X|List]) :- generomap(Rest, List).
 
+unique([], []).
+unique([X], [X]) :- !.
+unique([X,X|R], Rest) :- unique([X|R], Rest).
+unique([H,Y | T], [H|T1]):- Y \= H, unique( [Y|T], T1).
+
+
+% todos_los_generos(X) :-
+%     findall
+genero(X) :-
+    base_de_datos(L),
+    generomap(L, L0),
+    append(L0, L1),
+    sort(L1, L2),
+    member(X, L2).
+
+% genero(X) :-
+%     base_de_datos(L),
+%     append
 generoAnime(X, L) :-
     base_de_datos(List), member([X, _, _, L], List).
 
@@ -42,8 +63,7 @@ toLower([X|Xs],[I|R]) :- string_lower(X, I), toLower(Xs, R).
 
 % Realiza el query sobre el rating de todos los anime y los imprime en orden decreciente
 orderBy(rating, Sorted) :-
-    findall((Y,X),
-    rating(Y,X), List),
+    findall((Y,X), rating(Y,X), List),
     sort(2,  @>=, List,  Sorted).
 
 % Realiza el query sobre la popularidad de todos los anime y los imprime en orden decreciente
