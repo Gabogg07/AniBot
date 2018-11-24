@@ -32,9 +32,6 @@ genero(X) :-
     sort(L1, L2),
     member(X, L2).
 
-% genero(X) :-
-%     base_de_datos(L),
-%     append
 generoAnime(X, L) :-
     base_de_datos(List), member([X, _, _, L], List).
 
