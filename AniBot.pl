@@ -1,7 +1,17 @@
-anime(X) :- member(X,["Dragon Ball", "Naruto", "Bleach", "HunterXHunter", "Hamtaro", "Full Metal Alchemist"]).
+base_de_datos([
+    % Nombre anime, rating, popularidad, genero
+    ["Dragon Ball", 3, 7, ["Shounen","Aventura"]],
+    ["Naruto", 1, 5, ["Shounen"]],
+    ["Bleach", 4, 8, ["Shounen", "Sobrenatural"]],
+    ["HunterXHunter", 5, 3, ["Seinen", "Aventura"]],
+    ["Hamtaro", 2, 10, ["Kodomo"]],
+    ["Full Metal Alchemist: Brotherhood", 4, 1, ["Shounen", "Magia"]]
+    % ("Tokyo Ghoul"),
+    % ("Death Note"),
+    % ("Attack on Titan")
+]).
 
-genero(X) :- member(X,["Aventura", "Shoujo", "Shounen", "Kodomo", "Seinen", "Josei", "Ficción",
-                    "Fantasía", "Mecha", "Sobrenatural", "Magia", "Gore"]).
+anime(X) :- base_de_datos(L), member([X, _, _, _], L).
 
 generoAnime("Naruto",["Shounen","Aventura"]).
 generoAnime("Dragon Ball",["Shounen"]).
