@@ -1,0 +1,15 @@
+leerRespuesta.
+cuales son los mejores rating?
+cuales son los peores rating?
+que animes tienen rating 1?
+que animes tienen rating 2?
+que animes tienen rating 3?
+que animes tienen rating 4?
+que animes tienen rating 5?
+cuales son los mas populares?
+cuales son los menos populares?
+que animes son poco conocidos?
+que animes son conocidos?
+que animes son muy conocidos?
+me gusta el Aventura, el Kodomo, la Magia, el Seinen, el Shounen y lo Sobrenatural
+salir
