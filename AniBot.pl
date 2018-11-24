@@ -17,19 +17,11 @@ anime(X) :- base_de_datos(L), member([X, _, _, _], L).
 generoAnime(X, L) :-
     base_de_datos(List), member([X, _, _, L], List).
 
-rating("Dragon Ball",3).
-rating("Naruto",1).
-rating("Bleach",4).
-rating("HunterXHunter",5).
-rating("Hamtaro",2).
-rating("Full Metal Alchemist",4).
+rating(X, L) :-
+    base_de_datos(List), member([X, L, _, _], List).
 
-popularidad("Dragon Ball",7).
-popularidad("Naruto",5).
-popularidad("Bleach",8).
-popularidad("HunterXHunter",3).
-popularidad("Hamtaro",10).
-popularidad("Full Metal Alchemist",1).
+popularidad(X, L):-
+    base_de_datos(List), member([X, _, L, _], List).
 
 % Dado un arreglo imprime cada elemento en una linea
 printByLine([]).
