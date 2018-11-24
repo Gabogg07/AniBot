@@ -1,14 +1,23 @@
 base_de_datos([
     % Nombre anime, rating, popularidad, genero
+    % Traidos por los profesores
     ["Dragon Ball", 3, 7, ["Shounen","Aventura"]],
     ["Naruto", 1, 5, ["Shounen"]],
     ["Bleach", 4, 8, ["Shounen", "Sobrenatural"]],
     ["HunterXHunter", 5, 3, ["Seinen", "Aventura"]],
     ["Hamtaro", 2, 10, ["Kodomo"]],
-    ["Full Metal Alchemist: Brotherhood", 4, 1, ["Shounen", "Magia"]]
-    % ("Tokyo Ghoul"),
-    % ("Death Note"),
-    % ("Attack on Titan")
+    ["Full Metal Alchemist: Brotherhood", 4, 1, ["Shounen", "Magia"]],
+    % Llenados por nosotros
+    ["Death Note", 4, 10, ["Sobrenatural", "Mystery"]],
+    ["Attack on Titan", 5, 10, ["Shounen", "Aventura"]],
+    ["Code Geass", 5, 10, ["Mecha", "Mystery", "Shounen"]],
+    ["Fairy Tail", 3, 8, ["Magia", "Accion", "Aventura"]],
+    ["One Piece", 4, 7, ["Aventura", "Accion"]],
+    ["One Punch Man", 5, 10, ["Comedia", "Accion", "Sci-Fi", "Sobrenatural"]],
+    ["Akame ga Kill!", 3, 7, ["Accion", "Drama", "Fantasia", "Shounen"]],
+    ["Pokemon", 5, 10, ["Comedia", "Accion", "Fantasia", "Aventura"]],
+    ["Noragami", 3, 6, ["Aventura", "Accion", "Fantasia", "Shounen"]],
+    ["Ao no Exorcist", 2, 5, ["Mystery", "Drama"]]
 ]).
 
 anime(X) :- base_de_datos(L), member([X, _, _, _], L).
