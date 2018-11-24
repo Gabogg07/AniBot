@@ -13,12 +13,9 @@ base_de_datos([
 
 anime(X) :- base_de_datos(L), member([X, _, _, _], L).
 
-generoAnime("Naruto",["Shounen","Aventura"]).
-generoAnime("Dragon Ball",["Shounen"]).
-generoAnime("Bleach",["Shounen", "Sobrenatural"]).
-generoAnime("HunterXHunter",["Seinen", "Aventura"]).
-generoAnime("Hamtaro",["Kodomo"]).
-generoAnime("Full Metal Alchemist",["Shounen", "Magia"]).
+
+generoAnime(X, L) :-
+    base_de_datos(List), member([X, _, _, L], List).
 
 rating("Dragon Ball",3).
 rating("Naruto",1).
