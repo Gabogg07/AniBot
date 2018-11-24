@@ -75,18 +75,28 @@ separarGeneros([_, X| Generos], [X|R]):- separarGeneros(Generos,R).
 separarGeneros([],[]).
  
 %Dada una lista de generos, imprime para cada uno su nombre y los animes asociados.
-buscarPorGenero([X|T],L) :- atom_string(X,Q),writeln(Q), genero(Q), findall((A,G), (generoAnime(A,G), member(Q,G)), Lista), orderBy(rating, Sorted), filterByList(Sorted, Lista, Respuesta), printAnime(Respuesta), 
-							buscarPorGenero(T,L), !.
-buscarPorGenero([X|T],L) :- atom_string(X,Q),write('Lo siento no tengo información sobre '), writeln(Q), buscarPorGenero(T,L).
-buscarPorGenero([],[]).
+buscarPorGenero([X|T],[Respuesta|L],P) :- (P=rating; P=popularidad), atom_string(X,Q),writeln(Q), genero(Q), findall((A,G), (generoAnime(A,G), member(Q,G)), Lista), orderBy(P, Sorted), filterByList(Sorted, Lista, Respuesta), printAnime(Respuesta), 
+							buscarPorGenero(T,L,P), !.
+buscarPorGenero([X|T],L,P) :- atom_string(X,Q),write('Lo siento no tengo información sobre '), writeln(Q), buscarPorGenero(T,L,P).
+buscarPorGenero([],[],_).
 
+%Dadas dos listas conformadas por tuplas (X,Y), intersecta las dos listas conservando el orden de la primera.
 filterByList([(X,Y)|T], L1, [(X,Y)|R]) :- member((X,_),L1), filterByList(T, L1, R), !.
 filterByList([X|T], L1, R) :- filterByList(T,L1,R).
 filterByList([], _, []).  
 
+%Query sobre listado de generos
+respuesta([me,gusta|Generos]) :- separarGeneros(Generos, Listado), writeln("Segun el género te podemos recomendar:\n"), buscarPorGenero(Listado,Respuesta,rating).
 
-respuesta([me,gusta|Generos]) :- separarGeneros(Generos, Listado), writeln("Segun el género te podemos recomendar:\n"), buscarPorGenero(Listado,Respuesta).
 
+%Query sobre un genero por popularidad y/o rating
+respuesta([muestrame,animes,de,X,por,Y]) :-(Y = rating ; Y = popularidad), buscarPorGenero([X], Animes, Y).
+respuesta([muestrame,animes,de,X,por,Y,y,Z]) :-(Y = rating ; Y = popularidad), (Z = rating ; Z = popularidad), Z\=Y, atom_string(X,Q),writeln(Q), genero(Q), findall((A,G), (generoAnime(A,G), member(Q,G)), Animes),
+											 calcularRatingPopularidad(Animes, Temp), sort(2,  @>=, Temp,  Sorted), printAnime(Sorted).
+
+calcularRatingPopularidad([(X,_)|T], [(X,S)|L]) :- popularidad(X,P), rating(X,R), S is R+P, calcularRatingPopularidad(T,L).
+calcularRatingPopularidad([],[]).
+prueba:- calcularRatingPopularidad(["Naruto","Hamtaro"], Z), writeln(Z).
 
 respuesta([salir]) :- halt.
 %RESPUESTAS A PREGUNTAS GENERICAS
