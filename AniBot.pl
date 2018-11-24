@@ -229,7 +229,7 @@ respuesta([conoces,sobre|X]) :- unirCon(X, ' ', Nombre), anime(Nombre), write('S
                                 writeln(Nombre), base_de_datos(L), member([Nombre, R, P, G], L),
                                 write('Tiene rating '), write(R), write(', popularidad '), write(P),
                                 write(' y su genero entra en '), printListItems(G),!.
-respuesta([conoces,sobre|_]) :- writeln('Lo siento').
+respuesta([conoces,sobre|_]) :- writeln('Lo siento, aca es donde German te pregunta y agrega a la DB').
 
 
 respuesta([salir]) :-
