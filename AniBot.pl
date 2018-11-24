@@ -26,47 +26,82 @@ popularidad("Full Metal Alchemist",1).
 
 % Dado un arreglo imprime cada elemento en una linea
 printByLine([]).
-printByLine([X|List]) :- writeln(X), printByLine(List).
+printByLine([X|List]) :-
+    writeln(X),
+    printByLine(List).
 
 
 printAnime([]).
-printAnime([(X,_)|List]) :- atom_concat(" - ",X, Anime), writeln(Anime), printAnime(List).
+printAnime([(X,_)|List]) :-
+    atom_concat(" - ",X, Anime),
+    writeln(Anime),
+    printAnime(List).
 
 %Pasa una lista de strings todos a minuscula
 toLower([],[]).
 toLower([X|Xs],[I|R]) :- string_lower(X, I), toLower(Xs, R).
 
 % Realiza el query sobre el rating de todos los anime y los imprime en orden decreciente
-orderBy(rating, Sorted) :- findall((Y,X),rating(Y,X), List), sort(2,  @>=, List,  Sorted).
+orderBy(rating, Sorted) :-
+    findall((Y,X),
+    rating(Y,X), List),
+    sort(2,  @>=, List,  Sorted).
 
 % Realiza el query sobre la popularidad de todos los anime y los imprime en orden decreciente
-orderBy(popularidad, Sorted) :- findall((Y,X),popularidad(Y,X), List), sort(2,  @>=, List,  Sorted).
+orderBy(popularidad, Sorted) :-
+    findall((Y,X), popularidad(Y,X), List),
+    sort(2,  @>=, List,  Sorted).
 
  
 %Leer input el usuario y llama a la lista de respuestas
-leerRespuesta :- readln(X), nl, respuesta(X), leerRespuesta.
+leerRespuesta :-
+    readln(X),
+    nl,
+    respuesta(X),
+    leerRespuesta.
 
 
 %Verifica que un entero este entre 1 y X
 checkRange(X,Top) :- X @=< Top , 1 @=< X.
 
 %Queries sobre rating
-respuesta([cuales,son,los,mejores,rating,?]):- findall((X,_),rating(X,5), List), writeln("Listado de animes con rating 5: "), printAnime(List).
-respuesta([cuales,son,los,peores,rating,?]):- findall((X,_),rating(X,1), List), writeln("Listado de animes con rating 1: "), printAnime(List).
-respuesta([que,animes,tienen,rating,Q,?]):- checkRange(Q,5), findall((X,_),rating(X,Q), List), atom_concat("Listado de animes con rating ", Q, Salida), 
-										writeln(Salida), printAnime(List).
-respuesta([que,animes,tienen,rating,_,?]):- writeln("Disculpa, peros olo me han hablado de ratings entre 1 y 5. Intenta con uno de estos valores.").
+respuesta([cuales,son,los,mejores,rating,?]):-
+    findall((X,_),rating(X,5), List),
+    writeln("Listado de animes con rating 5: "),
+    printAnime(List).
+respuesta([cuales,son,los,peores,rating,?]):-
+    findall((X,_),rating(X,1), List),
+    writeln("Listado de animes con rating 1: "),
+    printAnime(List).
+respuesta([que,animes,tienen,rating,Q,?]):-
+    checkRange(Q,5), findall((X,_),rating(X,Q), List),
+    atom_concat("Listado de animes con rating ", Q, Salida),
+    writeln(Salida),
+    printAnime(List).
+respuesta([que,animes,tienen,rating,_,?]):-
+    writeln("Disculpa, peros olo me han hablado de ratings entre 1 y 5. Intenta con uno de estos valores.").
 
 %Queries sobre popularidad
-respuesta([cuales,son,los,mas,populares,?]):- findall((X,_),popularidad(X,10), List), writeln("Listado de animes bastante conocidos: "),
+respuesta([cuales,son,los,mas,populares,?]):-
+    findall((X,_),popularidad(X,10), List),
+    writeln("Listado de animes bastante conocidos: "),
 											  printAnime(List).
-respuesta([cuales,son,los,menos,populares,?]):- findall((X,_),(popularidad(X,Y), (Y=1; Y=2)), List), writeln("Listado de animes muy poco conocidos: "),
+
+respuesta([cuales,son,los,menos,populares,?]):-
+    findall((X,_),(popularidad(X,Y), (Y=1; Y=2)), List),
+    writeln("Listado de animes muy poco conocidos: "),
 											  printAnime(List).
-respuesta([que,animes,son,poco,conocidos,?]):- findall((X,_),(popularidad(X,Y), (Y=3; Y=4; Y=5)), List), writeln("Listado de animes poco conocidos: "), 
+respuesta([que,animes,son,poco,conocidos,?]):-
+    findall((X,_),(popularidad(X,Y), (Y=3; Y=4; Y=5)), List),
+    writeln("Listado de animes poco conocidos: "),
 											  printAnime(List).
-respuesta([que,animes,son,conocidos,?]):- findall((X,_),(popularidad(X,Y), (Y=6; Y=7)), List), writeln("Listado de animes conocidos: "), 
+respuesta([que,animes,son,conocidos,?]):-
+    findall((X,_),(popularidad(X,Y), (Y=6; Y=7)), List),
+    writeln("Listado de animes conocidos: "),
 											  printAnime(List).
-respuesta([que,animes,son,muy,conocidos,?]):- findall((X,_),(popularidad(X,Y), (Y=8; Y=9)), List), writeln("Listado de animes muy conocidos: "),
+respuesta([que,animes,son,muy,conocidos,?]):-
+    findall((X,_),(popularidad(X,Y), (Y=8; Y=9)), List),
+    writeln("Listado de animes muy conocidos: "),
 											  printAnime(List).
 
 %Dada una lista de generos en formato [articulo,genero,...] devuelve una lista solo con generos
@@ -75,17 +110,25 @@ separarGeneros([_, X| Generos], [X|R]):- separarGeneros(Generos,R).
 separarGeneros([],[]).
  
 %Dada una lista de generos, imprime para cada uno su nombre y los animes asociados.
-buscarPorGenero([X|T],L) :- atom_string(X,Q),writeln(Q), genero(Q), findall((A,G), (generoAnime(A,G), member(Q,G)), Lista), orderBy(rating, Sorted), filterByList(Sorted, Lista, Respuesta), printAnime(Respuesta), 
-							buscarPorGenero(T,L), !.
-buscarPorGenero([X|T],L) :- atom_string(X,Q),write('Lo siento no tengo información sobre '), writeln(Q), buscarPorGenero(T,L).
+buscarPorGenero([X|T],L) :-
+    atom_string(X,Q), writeln(Q), genero(Q),
+    findall((A,G), (generoAnime(A,G), member(Q,G)), Lista),
+    orderBy(rating, Sorted), filterByList(Sorted, Lista, Respuesta),
+    printAnime(Respuesta), buscarPorGenero(T,L), !.
+buscarPorGenero([X|T],L) :-
+    atom_string(X,Q), write('Lo siento no tengo información sobre '),
+    writeln(Q), buscarPorGenero(T,L).
 buscarPorGenero([],[]).
 
 filterByList([(X,Y)|T], L1, [(X,Y)|R]) :- member((X,_),L1), filterByList(T, L1, R), !.
-filterByList([X|T], L1, R) :- filterByList(T,L1,R).
+filterByList([_|T], L1, R) :- filterByList(T,L1,R).
 filterByList([], _, []).  
 
 
-respuesta([me,gusta|Generos]) :- separarGeneros(Generos, Listado), writeln("Segun el género te podemos recomendar:\n"), buscarPorGenero(Listado,Respuesta).
+respuesta([me,gusta|Generos]) :-
+    separarGeneros(Generos, Listado),
+    writeln("Segun el género te podemos recomendar:\n"),
+    buscarPorGenero(Listado, _).
 
 
 respuesta([salir]) :- halt.
