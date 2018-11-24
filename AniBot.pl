@@ -1,3 +1,5 @@
+listing(random_member).
+
 base_de_datos([
     % Nombre anime, rating, popularidad, genero
     % Traidos por los profesores
@@ -372,15 +374,24 @@ respuesta([quiero,ver,un, anime| X]):-
         Pinf is 10, Psup is 11,
         buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
         printGrid(QR).
-    
-
-
-
 
 respuesta([salir]) :-
     halt.
-%RESPUESTAS A PREGUNTAS GENERICAS
-% Quizas quisiste preguntar por los animes de cierta popularidad?
+
+respuesta(_) :- random_member(Respuesta,_), writeln(Respuesta).
+
+%Caso de respuesta generica, no se conoce la pregunta.
+random:random_member(Respuesta,_) :-
+    A = ['Quizas quisiste preguntar por los animes de cierta popularidad?',
+ 'En mi readme puedes ver algunas de las preguntas en las que te podria ayudar',
+ 'Recuerda que siempre puedes intentar agregar un anime a mi conocimiento, solo preguntame por el y veras',
+ 'Hay muchos generos de animes por los que me puedes preguntar, intenta con: "me gusta la Aventura" ',
+ 'Si buscas información sobre un anime en específico solo tienes preguntar si conozco sobre su nombre',
+ 'Me enseñaron a diferenciar mayúsculas y minúsculas, asi que ¡recuerda prestarles atencion!'],
+    length(A, B),
+    C is random(B),
+    nth0(C, A, Respuesta).
+
 
 :- writeln("¡Hola! Mi nombre es Anibot").
 :- writeln("Se mucho sobre animes, pero puedo aprender por lo que me vayas pidiendo").
