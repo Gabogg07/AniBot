@@ -122,7 +122,21 @@ unirCon(Entrada, Elem, String) :- atomic_list_concat(Entrada, Elem, Atom), atom_
 
 calcularRatingPopularidad([(X,_)|T], [(X,S)|L]) :- popularidad(X,P), rating(X,R), S is R+P, calcularRatingPopularidad(T,L).
 calcularRatingPopularidad([],[]).
-prueba:- calcularRatingPopularidad(["Naruto","Hamtaro"], Z), writeln(Z).
+
+buscarPorPopularidadRating(Rinf, Rsup, Pinf, Psup, Respuesta):-
+    base_de_datos(L), 
+        findall(
+            ([N,R,P,_]), 
+            (
+                member([N,R,P,_],L),
+                R@>=Rinf, R@<Rsup,
+                P@>=Pinf, P@<Psup
+            ), Respuesta).
+
+%Dada una lista que contiene listas con 4 elementos, imprime los primeros 3 en formato de columnas
+printGrid(X):- format("~a~t~35| ~t~a~t~11+ ~t~a~t~11+~n",['Anime','Rating','Popularidad']),  printGridAux(X),!. 
+printGridAux([[N,R,P,_]|T]):- format("~a~t~35| ~t~a~t~11+ ~t~a~t~11+~n",[N,R,P]), printGridAux(T).
+printGridAux([]).
 
 % Respuestas a preguntas definidas por el bot
 %Queries sobre rating
@@ -232,6 +246,137 @@ respuesta([conoces,sobre|X]) :- unirCon(X, ' ', Nombre), anime(Nombre), write('S
 respuesta([conoces,sobre|_]) :- writeln('Lo siento, aca es donde German te pregunta y agrega a la DB').
 
 
+%Preguntas sobre popularidad Y rating especifico
+%rating entre 4 y 5-- interesante
+respuesta([quiero,ver,un, anime| X]):-
+        (X=[interesante,y,muy,poco,conocido];
+         X=[muy,poco,conocido,e,interesante]),
+        Rinf is 4, Rsup is 6,
+        Pinf is 1, Psup is 3,
+        buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
+        printGrid(QR).
+        
+
+respuesta([quiero,ver,un, anime| X]):-
+        (X=[interesante,y,poco,conocido];
+         X=[poco,conocido,e,interesante]),
+        Rinf is 4, Rsup is 6,
+        Pinf is 3, Psup is 6,
+        buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
+        printGrid(QR).
+
+respuesta([quiero,ver,un, anime| X]):-
+        (X=[interesante,y,conocido];
+         X=[conocido,e,interesante]),
+        Rinf is 4, Rsup is 6,
+        Pinf is 6, Psup is 8,
+        buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
+        printGrid(QR).
+
+respuesta([quiero,ver,un, anime| X]):-
+        (X=[interesante,y,muy,conocido];
+         X=[muy,conocido,e,interesante]),
+        Rinf is 4, Rsup is 6,
+        Pinf is 8, Psup is 10,
+        buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
+        printGrid(QR).
+
+respuesta([quiero,ver,un, anime| X]):-
+        (X=[interesante,y,bastante,conocido];
+         X=[bastante,conocido,e,interesante]),
+        Rinf is 4, Rsup is 6,
+        Pinf is 10, Psup is 11,
+        buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
+        printGrid(QR).
+
+%Rating = 3 -- normal
+respuesta([quiero,ver,un, anime| X]):-
+        (X=[normal,y,muy,poco,conocido];
+         X=[muy,poco,conocido,y,normal]),
+        Rinf is 3, Rsup is 4,
+        Pinf is 1, Psup is 3,
+        buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
+        printGrid(QR).
+        
+
+respuesta([quiero,ver,un, anime| X]):-
+        (X=[normal,y,poco,conocido];
+         X=[poco,conocido,y,normal]),
+        Rinf is 3, Rsup is 4,
+        Pinf is 3, Psup is 6,
+        buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
+        printGrid(QR).
+
+respuesta([quiero,ver,un, anime| X]):-
+        (X=[normal,y,conocido];
+         X=[conocido,y,normal]),
+        Rinf is 3, Rsup is 4,
+        Pinf is 6, Psup is 8,
+        buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
+        printGrid(QR).
+
+respuesta([quiero,ver,un, anime| X]):-
+        (X=[normal,y,muy,conocido];
+         X=[muy,conocido,y,normal]),
+        Rinf is 3, Rsup is 4,
+        Pinf is 8, Psup is 10,
+        buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
+        printGrid(QR).
+
+respuesta([quiero,ver,un, anime| X]):-
+        (X=[normal,y,bastante,conocido];
+         X=[bastante,conocido,y,normal]),
+        Rinf is 3, Rsup is 4,
+        Pinf is 10, Psup is 11,
+        buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
+        printGrid(QR).
+
+%Rating entre 1 y 2 -- aburrido
+respuesta([quiero,ver,un, anime| X]):-
+        (X=[aburrido,y,muy,poco,conocido];
+         X=[muy,poco,conocido,y,aburrido]),
+        Rinf is 1, Rsup is 3,
+        Pinf is 1, Psup is 3,
+        buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
+        printGrid(QR).
+        
+
+respuesta([quiero,ver,un, anime| X]):-
+        (X=[aburrido,y,poco,conocido];
+         X=[poco,conocido,y,aburrido]),
+        Rinf is 1, Rsup is 3,
+        Pinf is 3, Psup is 6,
+        buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
+        printGrid(QR).
+
+respuesta([quiero,ver,un, anime| X]):-
+        (X=[aburrido,y,conocido];
+         X=[conocido,y,aburrido]),
+        Rinf is 1, Rsup is 3,
+        Pinf is 6, Psup is 8,
+        buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
+        printGrid(QR).
+
+respuesta([quiero,ver,un, anime| X]):-
+        (X=[aburrido,y,muy,conocido];
+         X=[muy,conocido,y,aburrido]),
+        Rinf is 1, Rsup is 3,
+        Pinf is 8, Psup is 10,
+        buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
+        printGrid(QR).
+
+respuesta([quiero,ver,un, anime| X]):-
+        (X=[aburrido,y,bastante,conocido];
+         X=[bastante,conocido,y,aburrido]),
+        Rinf is 1, Rsup is 3,
+        Pinf is 10, Psup is 11,
+        buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
+        printGrid(QR).
+    
+
+
+
+
 respuesta([salir]) :-
     halt.
 %RESPUESTAS A PREGUNTAS GENERICAS
@@ -243,3 +388,5 @@ respuesta([salir]) :-
 :- prompt('|: ', '> ').
 
 :- leerRespuesta.
+
+
