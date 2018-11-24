@@ -89,45 +89,6 @@ leerRespuesta :-
 %Verifica que un entero este entre 1 y X
 checkRange(X,Top) :- X @=< Top , 1 @=< X.
 
-%Queries sobre rating
-respuesta([cuales,son,los,mejores,rating,?]):-
-    findall((X,_),rating(X,5), List),
-    writeln("Listado de animes con rating 5: "),
-    printAnime(List).
-respuesta([cuales,son,los,peores,rating,?]):-
-    findall((X,_),rating(X,1), List),
-    writeln("Listado de animes con rating 1: "),
-    printAnime(List).
-respuesta([que,animes,tienen,rating,Q,?]):-
-    checkRange(Q,5), findall((X,_),rating(X,Q), List),
-    atom_concat("Listado de animes con rating ", Q, Salida),
-    writeln(Salida),
-    printAnime(List).
-respuesta([que,animes,tienen,rating,_,?]):-
-    writeln("Disculpa, peros olo me han hablado de ratings entre 1 y 5. Intenta con uno de estos valores.").
-
-%Queries sobre popularidad
-respuesta([cuales,son,los,mas,populares,?]):-
-    findall((X,_),popularidad(X,10), List),
-    writeln("Listado de animes bastante conocidos: "),
-											  printAnime(List).
-
-respuesta([cuales,son,los,menos,populares,?]):-
-    findall((X,_),(popularidad(X,Y), (Y=1; Y=2)), List),
-    writeln("Listado de animes muy poco conocidos: "),
-											  printAnime(List).
-respuesta([que,animes,son,poco,conocidos,?]):-
-    findall((X,_),(popularidad(X,Y), (Y=3; Y=4; Y=5)), List),
-    writeln("Listado de animes poco conocidos: "),
-											  printAnime(List).
-respuesta([que,animes,son,conocidos,?]):-
-    findall((X,_),(popularidad(X,Y), (Y=6; Y=7)), List),
-    writeln("Listado de animes conocidos: "),
-											  printAnime(List).
-respuesta([que,animes,son,muy,conocidos,?]):-
-    findall((X,_),(popularidad(X,Y), (Y=8; Y=9)), List),
-    writeln("Listado de animes muy conocidos: "),
-											  printAnime(List).
 
 %Dada una lista de generos en formato [articulo,genero,...] devuelve una lista solo con generos
 separarGeneros([_, X, Y| Generos], [X|R]):-  (Y=,; Y=y) , separarGeneros(Generos,R).
@@ -151,20 +112,112 @@ filterByList([(X,Y)|T], L1, [(X,Y)|R]) :- member((X,_),L1), filterByList(T, L1, 
 filterByList([_|T], L1, R) :- filterByList(T,L1,R).
 filterByList([], _, []).  
 
-%Query sobre listado de generos
-respuesta([me,gusta|Generos]) :- separarGeneros(Generos, Listado), writeln("Segun el género te podemos recomendar:\n"), 
-                                 buscarPorGenero(Listado,Respuesta,rating).
-
-
-%Query sobre un genero por popularidad y/o rating
-respuesta([muestrame,animes,de,X,por,Y]) :-(Y = rating ; Y = popularidad), buscarPorGenero([X], Animes, Y).
-respuesta([muestrame,animes,de,X,por,Y,y,Z]) :-(Y = rating ; Y = popularidad), (Z = rating ; Z = popularidad), Z\=Y, atom_string(X,Q),writeln(Q), genero(Q), findall((A,G), (generoAnime(A,G), member(Q,G)), Animes),
-											 calcularRatingPopularidad(Animes, Temp), sort(2,  @>=, Temp,  Sorted), printAnime(Sorted).
 
 calcularRatingPopularidad([(X,_)|T], [(X,S)|L]) :- popularidad(X,P), rating(X,R), S is R+P, calcularRatingPopularidad(T,L).
 calcularRatingPopularidad([],[]).
 prueba:- calcularRatingPopularidad(["Naruto","Hamtaro"], Z), writeln(Z).
 
-respuesta([salir]) :- halt.
+% Respuestas a preguntas definidas por el bot
+%Queries sobre rating
+respuesta([cuales, son, los, mejores, rating, ?]) :-
+    findall((X, _), rating(X, 5), List),
+    writeln("Listado de animes con rating 5: "),
+    printAnime(List).
+respuesta([cuales, son, los, peores, rating, ?]) :-
+    findall((X, _), rating(X, 1), List),
+    writeln("Listado de animes con rating 1: "),
+    printAnime(List).
+respuesta([que, animes, tienen, rating, Q, ?]) :-
+    checkRange(Q, 5),
+    findall((X, _), rating(X, Q), List),
+    atom_concat("Listado de animes con rating ", Q, Salida),
+    writeln(Salida),
+    printAnime(List).
+respuesta([que, animes, tienen, rating, _, ?]) :-
+    writeln("Disculpa, peros olo me han hablado de ratings entre 1 y 5. Intenta con uno de estos valores.").
+
+%Queries sobre popularidad
+respuesta([cuales, son, los, mas, populares, ?]) :-
+    findall((X, _), popularidad(X, 10), List),
+    writeln("Listado de animes bastante conocidos: "),
+    printAnime(List).
+
+respuesta([cuales, son, los, menos, populares, ?]) :-
+    findall((X, _),
+            ( popularidad(X, Y),
+              (   Y=1
+              ;   Y=2
+              )
+            ),
+            List),
+    writeln("Listado de animes muy poco conocidos: "),
+    printAnime(List).
+respuesta([que, animes, son, poco, conocidos, ?]) :-
+    findall((X, _),
+            ( popularidad(X, Y),
+              (   Y=3
+              ;   Y=4
+              ;   Y=5
+              )
+            ),
+            List),
+    writeln("Listado de animes poco conocidos: "),
+    printAnime(List).
+respuesta([que, animes, son, conocidos, ?]) :-
+    findall((X, _),
+            ( popularidad(X, Y),
+              (   Y=6
+              ;   Y=7
+              )
+            ),
+            List),
+    writeln("Listado de animes conocidos: "),
+    printAnime(List).
+respuesta([que, animes, son, muy, conocidos, ?]) :-
+    findall((X, _),
+            ( popularidad(X, Y),
+              (   Y=8
+              ;   Y=9
+              )
+            ),
+            List),
+    writeln("Listado de animes muy conocidos: "),
+    printAnime(List).
+
+%Query sobre listado de generos
+respuesta([me, gusta|Generos]) :-
+    separarGeneros(Generos, Listado),
+    writeln("Segun el género te podemos recomendar:\n"),
+    buscarPorGenero(Listado, _, rating).
+
+
+%Query sobre un genero por popularidad y/o rating
+respuesta([muestrame, animes, de, X, por, Y]) :-
+    (   Y=rating
+    ;   Y=popularidad
+    ),
+    buscarPorGenero([X], _, Y).
+respuesta([muestrame, animes, de, X, por, Y, y, Z]) :-
+    (   Y=rating
+    ;   Y=popularidad
+    ),
+    (   Z=rating
+    ;   Z=popularidad
+    ),
+    Z\=Y,
+    atom_string(X, Q),
+    writeln(Q),
+    genero(Q),
+    findall((A, G),
+            ( generoAnime(A, G),
+              member(Q, G)
+            ),
+            Animes),
+    calcularRatingPopularidad(Animes, Temp),
+    sort(2, @>=, Temp, Sorted),
+    printAnime(Sorted).
+
+respuesta([salir]) :-
+    halt.
 %RESPUESTAS A PREGUNTAS GENERICAS
 % Quizas quisiste preguntar por los animes de cierta popularidad?
