@@ -98,7 +98,7 @@ separarGeneros([],[]).
 %Dada una lista de generos, imprime para cada uno su nombre y los animes asociados.
 
 buscarPorGenero([X|T],[Respuesta|L],P) :- 
-              (P=rating; P=popularidad), atom_string(X,Q),writeln(Q), genero(Q),
+              (P=rating; P=popularidad), genero(Q), atom_string(X,Q),writeln(Q), 
               findall((A,G), (generoAnime(A,G), member(Q,G)), Lista), orderBy(P, Sorted), 
               filterByList(Sorted, Lista, Respuesta), printAnime(Respuesta), 
 							buscarPorGenero(T,L,P), !.
