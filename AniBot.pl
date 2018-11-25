@@ -149,12 +149,33 @@ leerRating(Rating) :-
     write('¿Que rating tiene? '),
     readln(X),
     (   X=[Rating],
-        member(Rating, [1, 2, 3, 4, 5]))
+        member(Rating, [1, 2, 3, 4, 5])
         % Se le termina de pedir input cuando ya el numero esta entre 1 y 5
-    ->   !
+    ->  !
         % El input valido debe estar entre 1 y 5, si no es asi se le pide input nuevamente
     ;   writeln('El rating especificado no es valido, debe ser un numero entre 1 y 5'),
         leerRating(Rating)
+    ).
+
+% leerPopularidad: Predicado que unifica la popularidad dada por el usuario
+% con el parametro dado. Si el input es omitido (se le da a enter sin haber
+% escrito nada) se le asigna una popularidad por defecto (1)
+leerPopularidad(Popularidad) :-
+    write('¿Que popularidad tiene? '),
+    readln(X),
+    (
+        X = []
+    ->  Popularidad is 1
+    ;   (
+            X = [Popularidad],
+            member(Popularidad, [1,2,3,4,5,6,7,8,9,10])
+            % Si se satisface nos regresamos felices
+        ->  !
+            % En caso contrario le indicamos en que se equivoco y luego volvemos a pedir todo
+        ;   writeln('La popularidad espeficiada no es valida, debe ser un numero'),
+            writeln(' entre 1 y 10; o vacio, espeficicando 1'),
+            leerPopularidad(Popularidad)
+        )
     ).
 
 % Respuestas a preguntas definidas por el bot
