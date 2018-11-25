@@ -198,10 +198,7 @@ generosToString([Genero| ListaGeneros], [GeneroStr| ListaStr]) :-
 % subirPopularidad: Predicado que sube la popularidad de un anime si su cantidad
 % de preguntas es igual a 5.
 subirPopularidad(Anime) :-
-    writeln('------INICIO---------'),
-    writeln(Anime),
     cantidadPreguntas(Anime, CantPreg),
-    writeln(Anime),
     retract(cantidadPreguntas(Anime, CantPreg)),
     (   CantPreg<4
     ->  NuevaCantPreg is CantPreg+1,
@@ -214,8 +211,7 @@ subirPopularidad(Anime) :-
             assert(popularidad(Anime, NuevaPopularidad))
             ; !
             )
-    ),
-    writeln(Anime), writeln('---TERMINO---').
+    ).
 
 % Respuestas a preguntas definidas por el bot
 %Queries sobre rating
@@ -333,9 +329,7 @@ respuesta([conoces, sobre|X]) :-
     write(' y su genero entra en '),
     printListItems(G),
     flush_output,
-    writeln('INICIO RESPUESTA'),
     subirPopularidad(Nombre),
-    writeln('FIN RESPUESTA'),
     !.
 respuesta([conoces, sobre|X]) :-
     unirCon(X, ' ', Nombre),
