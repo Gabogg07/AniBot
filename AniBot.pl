@@ -145,19 +145,19 @@ printGridAux([]).
 % leerRating: Predicado que unifica el rating dado por el usuario
 % cuando se le pregunta por los datos del anime que no existe
 %   Rating: Valor entre 1 y 5 dado por el usuario
-% Caso cuando el rating leido esta en el rango valido lo unificamos con Rating
-leerRating(Rating):-
-    write('¿Que rating tiene? '), readln(X), X = [Rating], member(Rating, [1,2,3,4,5]).
-% En caso contrario se le indica al usuario que esta errado y volvemos a llamar al predicado
-% hasta que el input sea correcto
 leerRating(Rating) :-
     write('¿Que rating tiene? '),
     readln(X),
-    X = [Rating],
-    \+ member(X, [1, 2, 3, 4, 5]),
-    write('El rating especificado no es valido, debe ser un numero entre 1 y 5'),
-    nl,
-    leerRating(Rating).
+    (   (   X=[]
+        ;   X=[RatingU|_],
+            \+ member(RatingU, [1, 2, 3, 4, 5])
+        )
+        % El input valido debe estar entre 1 y 5, si no es asi se le pide input nuevamente
+    ->  writeln('El rating especificado no es valido, debe ser un numero entre 1 y 5'),
+        % Se le termina de pedir input cuando ya el numero esta entre 1 y 5
+        leerRating(Rating)
+    ;   X=[Rating]
+    ).
 
 % Respuestas a preguntas definidas por el bot
 %Queries sobre rating
