@@ -142,6 +142,9 @@ printGridAux([]).
 %%%%%%%%%%%%%% Predicados de utilidad %%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% leerRating: Predicado que unifica el rating dado por el usuario
+% cuando se le pregunta por los datos del anime que no existe
+%   Rating: Valor entre 1 y 5 dado por el usuario
 % Caso cuando el rating leido esta en el rango valido lo unificamos con Rating
 leerRating(Rating):-
     write('¿Que rating tiene? '), readln(X), X = [Rating], member(Rating, [1,2,3,4,5]).
