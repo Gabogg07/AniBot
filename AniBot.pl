@@ -138,6 +138,24 @@ printGrid(X):- format("~a~t~35| ~t~a~t~11+ ~t~a~t~11+~n",['Anime','Rating','Popu
 printGridAux([[N,R,P,_]|T]):- format("~a~t~35| ~t~a~t~11+ ~t~a~t~11+~n",[N,R,P]), printGridAux(T).
 printGridAux([]).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Predicados de utilidad %%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Caso cuando el rating leido esta en el rango valido lo unificamos con Rating
+leerRating(Rating):-
+    write('¿Que rating tiene? '), readln(X), X = [Rating], member(Rating, [1,2,3,4,5]).
+% En caso contrario se le indica al usuario que esta errado y volvemos a llamar al predicado
+% hasta que el input sea correcto
+leerRating(Rating) :-
+    write('¿Que rating tiene? '),
+    readln(X),
+    X = [Rating],
+    \+ member(X, [1, 2, 3, 4, 5]),
+    write('El rating especificado no es valido, debe ser un numero entre 1 y 5'),
+    nl,
+    leerRating(Rating).
+
 % Respuestas a preguntas definidas por el bot
 %Queries sobre rating
 respuesta([cuales, son, los, mejores, rating, ?]) :-
