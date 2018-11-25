@@ -177,6 +177,18 @@ leerPopularidad(Popularidad) :-
         )
     ).
 
+% anadirGeneros: Anade los generos a la base de datos de generos.
+anadirGeneros([]) :- !.
+anadirGeneros([Genero|ListaDeGeneros]) :-
+    atom_string(Genero, GeneroAtom),
+    assert(genero(GeneroAtom)), anadirGeneros(ListaDeGeneros).
+
+% generosToString: Recibe una lista de generos como atomos y las pasa a strings
+generosToString([], []) :- !.
+generosToString([Genero| ListaGeneros], [GeneroStr| ListaStr]) :-
+    atom_string(Genero, GeneroStr),
+    generosToString(ListaGeneros, ListaStr).
+
 % Respuestas a preguntas definidas por el bot
 %Queries sobre rating
 respuesta([cuales, son, los, mejores, rating, ?]) :-
@@ -302,9 +314,13 @@ respuesta([conoces, sobre|X]) :-
     nl,
     write('¿X que generos pertenece el anime? '),
     readln(Gen),
-    separarGeneros(Gen, Generos),
+    separarGeneros(Gen, Gen1),
     leerRating(Rating),
     leerPopularidad(Popularidad),
+    writeln(generosTo),
+    generosToString(Gen1, Generos),
+    writeln(generosTa),
+    anadirGeneros(Generos),
     assert(anime(Nombre)),
     assert(rating(Nombre, Rating)),
     assert(generoAnime(Nombre, Generos)),
