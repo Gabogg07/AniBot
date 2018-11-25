@@ -124,11 +124,10 @@ calcularRatingPopularidad([(X,_)|T], [(X,S)|L]) :- popularidad(X,P), rating(X,R)
 calcularRatingPopularidad([],[]).
 
 buscarPorPopularidadRating(Rinf, Rsup, Pinf, Psup, Respuesta):-
-    base_de_datos(L), 
         findall(
             ([N,R,P,_]), 
             (
-                member([N,R,P,_],L),
+                (anime(N), rating(N, R), popularidad(N, P)),
                 R@>=Rinf, R@<Rsup,
                 P@>=Pinf, P@<Psup
             ), Respuesta).
