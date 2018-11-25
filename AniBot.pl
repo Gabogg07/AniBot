@@ -1,3 +1,11 @@
+/**
+    @descr Anibot.pl
+            Código fuente de Anibot, bot que interactua con el usuario respondiendo ciertas preguntas
+            asociadas a animes.
+    @author German Robayo y Gabriel Gutierrez
+    @date Noviembre de 2018
+*/
+
 listing(random_member).
 
 base_de_datos([
@@ -341,14 +349,12 @@ respuesta([conoces, sobre|X]) :-
     writeln('"'),
     writeln('Pero si me das informacion adicional, lo puedo tomar en cuenta para la siguiente :)'),
     nl,
-    write('¿X que generos pertenece el anime? '),
+    write('¿A que generos pertenece el anime? '),
     readln(Gen),
     separarGeneros(Gen, Gen1),
     leerRating(Rating),
     leerPopularidad(Popularidad),
-    writeln(generosTo),
     generosToString(Gen1, Generos),
-    writeln(generosTa),
     anadirGeneros(Generos),
     assert(anime(Nombre)),
     assert(rating(Nombre, Rating)),
