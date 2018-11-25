@@ -96,7 +96,9 @@ checkRange(X,Top) :- X @=< Top , 1 @=< X.
 
 %Dada una lista de generos en formato [articulo,genero,...] devuelve una lista solo con generos
 separarGeneros([_, X, Y| Generos], [X|R]):-  (Y=,; Y=y) , separarGeneros(Generos,R).
-separarGeneros([_, X| Generos], [X|R]):- separarGeneros(Generos,R).
+separarGeneros([X, Y| Generos], [X|R]):-  (Y=,; Y=y) , separarGeneros(Generos,R).
+separarGeneros([_, X], [X]).
+separarGeneros([X], [X]).
 separarGeneros([],[]).
  
 %Dada una lista de generos, imprime para cada uno su nombre y los animes asociados.
