@@ -283,7 +283,22 @@ respuesta([conoces,sobre|X]) :- unirCon(X, ' ', Nombre), anime(Nombre), write('S
                                 writeln(Nombre), base_de_datos(L), member([Nombre, R, P, G], L),
                                 write('Tiene rating '), write(R), write(', popularidad '), write(P),
                                 write(' y su genero entra en '), printListItems(G),!.
-respuesta([conoces,sobre|_]) :- writeln('Lo siento, aca es donde German te pregunta y agrega a la DB').
+respuesta([conoces,sobre|X]) :-
+    unirCon(X, ' ', Nombre), \+ anime(Nombre),
+    write('Lo siento, no conozco el anime: "'), write(Nombre), writeln('"'),
+    writeln('Pero si me das informacion adicional, lo puedo tomar en cuenta para la siguiente :)'),
+    nl,
+    write('¿A que generos pertenece el anime? '), readln(Gen),
+    % separarGeneros(Gen, Generos), nl.
+    separarGeneros(Gen, Generos),
+    leerRating(Rating),
+    leerPopularidad(Popularidad),
+    assert(anime(Nombre)), % Anadimos anime
+    assert(rating(Nombre, Rating)), % Vinculamos rating
+    assert(generoAnime(Nombre, Generos)), % Vinculamos generos
+    assert(popularidad(Nombre, Popularidad)), % Vinculamos popularidad
+    writeln('¡Perfecto! La proxima vez que preguntes ya sabre que responder').
+    % writeln('Lo siento, aca es donde German te pregunta y agrega a la DB').
 
 
 %Preguntas sobre popularidad Y rating especifico
