@@ -212,6 +212,7 @@ subirPopularidad(Anime) :-
         ->  NuevaPopularidad is Popularidad + 1,
             retract(popularidad(Anime, Popularidad)),
             assert(popularidad(Anime, NuevaPopularidad))
+            ; !
             )
     ),
     writeln(Anime), writeln('---TERMINO---').
