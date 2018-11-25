@@ -44,6 +44,11 @@ rating(X, L) :-
 popularidad(X, L):-
     base_de_datos(List), member([X, _, L, _], List).
 
+inicializarCantidadPreguntas([]).
+inicializarCantidadPreguntas([Anime|Animes]) :-
+    assert(cantidadPreguntas(Anime, 0)), inicializarCantidadPreguntas(Animes).
+
+
 % Dado un arreglo imprime cada elemento en una linea
 printByLine([]).
 printByLine([X|List]) :-
@@ -185,6 +190,19 @@ generosToString([Genero| ListaGeneros], [GeneroStr| ListaStr]) :-
     atom_string(Genero, GeneroStr),
     generosToString(ListaGeneros, ListaStr).
 
+
+% subirPopularidad: Predicado que sube la popularidad de un anime si su cantidad
+% de preguntas es igual a 5.
+:- (dynamic cantidadPreguntas/2).
+subirPopularidad(Anime) :-
+    cantidadPreguntas(Anime, CantPreg),
+    retract(cantidadPreguntas(Anime, CantPreg)),
+    (   CantPreg<4
+    ->  NuevaCantPreg is CantPreg+1,
+        assert(cantidadPreguntas(Anime, NuevaCantPreg))
+    ;   assert(cantidadPreguntas(Anime, 0))
+    ).
+
 % Respuestas a preguntas definidas por el bot
 %Queries sobre rating
 respuesta([cuales, son, los, mejores, rating, ?]) :-
@@ -299,7 +317,8 @@ respuesta([conoces, sobre|X]) :-
     write(', popularidad '),
     write(P),
     write(' y su genero entra en '),
-    printListItems(G), !.
+    printListItems(G),
+    subirPopularidad(Nombre), !.
 respuesta([conoces, sobre|X]) :-
     unirCon(X, ' ', Nombre),
     \+ anime(Nombre),
@@ -461,11 +480,15 @@ respuesta([salir]) :-
 %RESPUESTAS A PREGUNTAS GENERICAS
 % Quizas quisiste preguntar por los animes de cierta popularidad?
 
-:- writeln("¡Hola! Mi nombre es Anibot").
-:- writeln("Se mucho sobre animes, pero puedo aprender por lo que me vayas pidiendo").
-:- writeln("¿Que necesitas?").
-:- prompt('|: ', '> ').
 
-:- leerRespuesta.
+:- dynamic cantidadPreguntas/2.
+:-
+    findall(X, anime(X), Animes),
+    inicializarCantidadPreguntas(Animes),
+    writeln("¡Hola! Mi nombre es Anibot"),
+    writeln("Se mucho sobre animes, pero puedo aprender por lo que me vayas pidiendo"),
+    writeln("¿Que necesitas?"),
+    prompt('|: ', '> '),
+    leerRespuesta.
 
 
