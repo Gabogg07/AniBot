@@ -340,6 +340,7 @@ respuesta([conoces, sobre|X]) :-
     assert(rating(Nombre, Rating)),
     assert(generoAnime(Nombre, Generos)),
     assert(popularidad(Nombre, Popularidad)),
+    assert(cantidadPreguntas(Nombre, 1)),
     writeln('¡Perfecto! La proxima vez que preguntes ya sabre que responder').
     % writeln('Lo siento, aca es donde German te pregunta y agrega a la DB').
 
