@@ -41,13 +41,16 @@ generoAnime(X, L) :-
 rating(X, L) :-
     base_de_datos(List), member([X, L, _, _], List).
 
-popularidad(X, L):-
-    base_de_datos(List), member([X, _, L, _], List).
-
 inicializarCantidadPreguntas([]).
 inicializarCantidadPreguntas([Anime|Animes]) :-
     assert(cantidadPreguntas(Anime, 0)), inicializarCantidadPreguntas(Animes).
 
+inicializarPopularidad([]).
+inicializarPopularidad([Anime|Animes]) :-
+    base_de_datos(L),
+    member([Anime, _, P, _], L),
+    assert(popularidad(Anime, P)),
+    inicializarPopularidad(Animes).
 
 % Dado un arreglo imprime cada elemento en una linea
 printByLine([]).
@@ -80,7 +83,7 @@ orderBy(popularidad, Sorted) :-
     findall((Y,X), popularidad(Y,X), List),
     sort(2,  @>=, List,  Sorted).
 
- 
+
 %Leer input el usuario y llama a la lista de respuestas
 leerRespuesta :-
     readln(X),
@@ -99,15 +102,15 @@ separarGeneros([X, Y| Generos], [X|R]):-  (Y=,; Y=y) , separarGeneros(Generos,R)
 separarGeneros([_, X], [X]).
 separarGeneros([X], [X]).
 separarGeneros([],[]).
- 
+
 %Dada una lista de generos, imprime para cada uno su nombre y los animes asociados.
 
-buscarPorGenero([X|T],[Respuesta|L],P) :- 
-              (P=rating; P=popularidad), genero(Q), atom_string(X,Q),writeln(Q), 
-              findall((A,G), (generoAnime(A,G), member(Q,G)), Lista), orderBy(P, Sorted), 
-              filterByList(Sorted, Lista, Respuesta), printAnime(Respuesta), 
+buscarPorGenero([X|T],[Respuesta|L],P) :-
+              (P=rating; P=popularidad), genero(Q), atom_string(X,Q),writeln(Q),
+              findall((A,G), (generoAnime(A,G), member(Q,G)), Lista), orderBy(P, Sorted),
+              filterByList(Sorted, Lista, Respuesta), printAnime(Respuesta),
 							buscarPorGenero(T,L,P), !.
-buscarPorGenero([X|T],L,P) :- atom_string(X,Q),write('Lo siento no tengo información sobre '), 
+buscarPorGenero([X|T],L,P) :- atom_string(X,Q),write('Lo siento no tengo información sobre '),
               writeln(Q), buscarPorGenero(T,L,P).
 buscarPorGenero([],[],_).
 
@@ -115,7 +118,7 @@ buscarPorGenero([],[],_).
 %Dadas dos listas conformadas por tuplas (X,Y), intersecta las dos listas conservando el orden de la primera.
 filterByList([(X,Y)|T], L1, [(X,Y)|R]) :- member((X,_),L1), filterByList(T, L1, R), !.
 filterByList([_|T], L1, R) :- filterByList(T,L1,R).
-filterByList([], _, []).  
+filterByList([], _, []).
 
 %Dada una lista se introduce entre sus elementos <Elem> y retorna el string resultante
 unirCon(Entrada, Elem, String) :- atomic_list_concat(Entrada, Elem, Atom), atom_string(Atom, String).
@@ -126,7 +129,7 @@ calcularRatingPopularidad([],[]).
 
 buscarPorPopularidadRating(Rinf, Rsup, Pinf, Psup, Respuesta):-
         findall(
-            ([N,R,P,_]), 
+            ([N,R,P,_]),
             (
                 (anime(N), rating(N, R), popularidad(N, P)),
                 R@>=Rinf, R@<Rsup,
@@ -134,7 +137,7 @@ buscarPorPopularidadRating(Rinf, Rsup, Pinf, Psup, Respuesta):-
             ), Respuesta).
 
 %Dada una lista que contiene listas con 4 elementos, imprime los primeros 3 en formato de columnas
-printGrid(X):- format("~a~t~35| ~t~a~t~11+ ~t~a~t~11+~n",['Anime','Rating','Popularidad']),  printGridAux(X),!. 
+printGrid(X):- format("~a~t~35| ~t~a~t~11+ ~t~a~t~11+~n",['Anime','Rating','Popularidad']),  printGridAux(X),!.
 printGridAux([[N,R,P,_]|T]):- format("~a~t~35| ~t~a~t~11+ ~t~a~t~11+~n",[N,R,P]), printGridAux(T).
 printGridAux([]).
 
@@ -354,7 +357,7 @@ respuesta([quiero,ver,un, anime| X]):-
         Pinf is 1, Psup is 3,
         buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
         printGrid(QR).
-        
+
 
 respuesta([quiero,ver,un, anime| X]):-
         (X=[interesante,y,poco,conocido];
@@ -396,7 +399,7 @@ respuesta([quiero,ver,un, anime| X]):-
         Pinf is 1, Psup is 3,
         buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
         printGrid(QR).
-        
+
 
 respuesta([quiero,ver,un, anime| X]):-
         (X=[normal,y,poco,conocido];
@@ -438,7 +441,7 @@ respuesta([quiero,ver,un, anime| X]):-
         Pinf is 1, Psup is 3,
         buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
         printGrid(QR).
-        
+
 
 respuesta([quiero,ver,un, anime| X]):-
         (X=[aburrido,y,poco,conocido];
@@ -471,7 +474,7 @@ respuesta([quiero,ver,un, anime| X]):-
         Pinf is 10, Psup is 11,
         buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
         printGrid(QR).
-    
+
 
 
 
@@ -486,6 +489,7 @@ respuesta([salir]) :-
 :-
     findall(X, anime(X), Animes),
     inicializarCantidadPreguntas(Animes),
+    inicializarPopularidad(Animes),
     writeln("¡Hola! Mi nombre es Anibot"),
     writeln("Se mucho sobre animes, pero puedo aprender por lo que me vayas pidiendo"),
     writeln("¿Que necesitas?"),
