@@ -279,24 +279,37 @@ respuesta([muestrame, animes, de, X, por, Y, y, Z]) :-
     printAnime(Sorted).
 
 %Query sobre datos de un animes
-respuesta([conoces,sobre|X]) :- unirCon(X, ' ', Nombre), anime(Nombre), write('Si, esto es lo que se sobre '), 
-                                writeln(Nombre), base_de_datos(L), member([Nombre, R, P, G], L),
-                                write('Tiene rating '), write(R), write(', popularidad '), write(P),
-                                write(' y su genero entra en '), printListItems(G),!.
-respuesta([conoces,sobre|X]) :-
-    unirCon(X, ' ', Nombre), \+ anime(Nombre),
-    write('Lo siento, no conozco el anime: "'), write(Nombre), writeln('"'),
+respuesta([conoces, sobre|X]) :-
+    unirCon(X, ' ', Nombre),
+    anime(Nombre),
+    write('Si, esto es lo que se sobre '),
+    writeln(Nombre),
+    rating(Nombre, R),
+    popularidad(Nombre, P),
+    generoAnime(Nombre, G),
+    write('Tiene rating '),
+    write(R),
+    write(', popularidad '),
+    write(P),
+    write(' y su genero entra en '),
+    printListItems(G), !.
+respuesta([conoces, sobre|X]) :-
+    unirCon(X, ' ', Nombre),
+    \+ anime(Nombre),
+    write('Lo siento, no conozco el anime: "'),
+    write(Nombre),
+    writeln('"'),
     writeln('Pero si me das informacion adicional, lo puedo tomar en cuenta para la siguiente :)'),
     nl,
-    write('¿A que generos pertenece el anime? '), readln(Gen),
-    % separarGeneros(Gen, Generos), nl.
+    write('¿X que generos pertenece el anime? '),
+    readln(Gen),
     separarGeneros(Gen, Generos),
     leerRating(Rating),
     leerPopularidad(Popularidad),
-    assert(anime(Nombre)), % Anadimos anime
-    assert(rating(Nombre, Rating)), % Vinculamos rating
-    assert(generoAnime(Nombre, Generos)), % Vinculamos generos
-    assert(popularidad(Nombre, Popularidad)), % Vinculamos popularidad
+    assert(anime(Nombre)),
+    assert(rating(Nombre, Rating)),
+    assert(generoAnime(Nombre, Generos)),
+    assert(popularidad(Nombre, Popularidad)),
     writeln('¡Perfecto! La proxima vez que preguntes ya sabre que responder').
     % writeln('Lo siento, aca es donde German te pregunta y agrega a la DB').
 
