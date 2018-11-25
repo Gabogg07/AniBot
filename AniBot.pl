@@ -86,6 +86,7 @@ orderBy(popularidad, Sorted) :-
 
 %Leer input el usuario y llama a la lista de respuestas
 leerRespuesta :-
+    flush_output,
     readln(X),
     nl,
     respuesta(X),
@@ -196,15 +197,24 @@ generosToString([Genero| ListaGeneros], [GeneroStr| ListaStr]) :-
 
 % subirPopularidad: Predicado que sube la popularidad de un anime si su cantidad
 % de preguntas es igual a 5.
-:- (dynamic cantidadPreguntas/2).
 subirPopularidad(Anime) :-
+    writeln('------INICIO---------'),
+    writeln(Anime),
     cantidadPreguntas(Anime, CantPreg),
+    writeln(Anime),
     retract(cantidadPreguntas(Anime, CantPreg)),
     (   CantPreg<4
     ->  NuevaCantPreg is CantPreg+1,
         assert(cantidadPreguntas(Anime, NuevaCantPreg))
-    ;   assert(cantidadPreguntas(Anime, 0))
-    ).
+    ;   assert(cantidadPreguntas(Anime, 0)),
+        popularidad(Anime, Popularidad),
+        (   Popularidad < 10
+        ->  NuevaPopularidad is Popularidad + 1,
+            retract(popularidad(Anime, Popularidad)),
+            assert(popularidad(Anime, NuevaPopularidad))
+            )
+    ),
+    writeln(Anime), writeln('---TERMINO---').
 
 % Respuestas a preguntas definidas por el bot
 %Queries sobre rating
@@ -321,7 +331,11 @@ respuesta([conoces, sobre|X]) :-
     write(P),
     write(' y su genero entra en '),
     printListItems(G),
-    subirPopularidad(Nombre), !.
+    flush_output,
+    writeln('INICIO RESPUESTA'),
+    subirPopularidad(Nombre),
+    writeln('FIN RESPUESTA'),
+    !.
 respuesta([conoces, sobre|X]) :-
     unirCon(X, ' ', Nombre),
     \+ anime(Nombre),
@@ -486,14 +500,15 @@ respuesta([salir]) :-
 
 
 :- dynamic cantidadPreguntas/2.
-:-
-    findall(X, anime(X), Animes),
-    inicializarCantidadPreguntas(Animes),
-    inicializarPopularidad(Animes),
-    writeln("¡Hola! Mi nombre es Anibot"),
-    writeln("Se mucho sobre animes, pero puedo aprender por lo que me vayas pidiendo"),
-    writeln("¿Que necesitas?"),
-    prompt('|: ', '> '),
-    leerRespuesta.
+:- dynamic popularidad/2.
+
+:- findall(X, anime(X), Animes),
+   inicializarCantidadPreguntas(Animes),
+   inicializarPopularidad(Animes),
+   writeln("¡Hola! Mi nombre es Anibot"),
+   writeln("Se mucho sobre animes, pero puedo aprender por lo que me vayas pidiendo"),
+   writeln("¿Que necesitas?"),
+   prompt('|: ', '> '),
+   leerRespuesta.
 
 
