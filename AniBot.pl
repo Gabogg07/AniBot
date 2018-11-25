@@ -26,12 +26,6 @@ generomap([], []).
 generomap([[_, _, _, X]], [X]) :- !.
 generomap([[_, _, _, X]|Rest], [X|List]) :- generomap(Rest, List).
 
-unique([], []).
-unique([X], [X]) :- !.
-unique([X,X|R], Rest) :- unique([X|R], Rest).
-unique([H,Y | T], [H|T1]):- Y \= H, unique( [Y|T], T1).
-
-
 % todos_los_generos(X) :-
 %     findall
 genero(X) :-
