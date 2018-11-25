@@ -28,12 +28,6 @@ generomap([], []).
 generomap([[_, _, _, X]], [X]) :- !.
 generomap([[_, _, _, X]|Rest], [X|List]) :- generomap(Rest, List).
 
-unique([], []).
-unique([X], [X]) :- !.
-unique([X,X|R], Rest) :- unique([X|R], Rest).
-unique([H,Y | T], [H|T1]):- Y \= H, unique( [Y|T], T1).
-
-
 % todos_los_generos(X) :-
 %     findall
 genero(X) :-
@@ -49,8 +43,16 @@ generoAnime(X, L) :-
 rating(X, L) :-
     base_de_datos(List), member([X, L, _, _], List).
 
-popularidad(X, L):-
-    base_de_datos(List), member([X, _, L, _], List).
+inicializarCantidadPreguntas([]).
+inicializarCantidadPreguntas([Anime|Animes]) :-
+    assert(cantidadPreguntas(Anime, 0)), inicializarCantidadPreguntas(Animes).
+
+inicializarPopularidad([]).
+inicializarPopularidad([Anime|Animes]) :-
+    base_de_datos(L),
+    member([Anime, _, P, _], L),
+    assert(popularidad(Anime, P)),
+    inicializarPopularidad(Animes).
 
 % Dado un arreglo imprime cada elemento en una linea
 printByLine([]).
@@ -83,9 +85,10 @@ orderBy(popularidad, Sorted) :-
     findall((Y,X), popularidad(Y,X), List),
     sort(2,  @>=, List,  Sorted).
 
- 
+
 %Leer input el usuario y llama a la lista de respuestas
 leerRespuesta :-
+    flush_output,
     readln(X),
     nl,
     respuesta(X),
@@ -98,17 +101,19 @@ checkRange(X,Top) :- X @=< Top , 1 @=< X.
 
 %Dada una lista de generos en formato [articulo,genero,...] devuelve una lista solo con generos
 separarGeneros([_, X, Y| Generos], [X|R]):-  (Y=,; Y=y) , separarGeneros(Generos,R).
-separarGeneros([_, X| Generos], [X|R]):- separarGeneros(Generos,R).
+separarGeneros([X, Y| Generos], [X|R]):-  (Y=,; Y=y) , separarGeneros(Generos,R).
+separarGeneros([_, X], [X]).
+separarGeneros([X], [X]).
 separarGeneros([],[]).
- 
+
 %Dada una lista de generos, imprime para cada uno su nombre y los animes asociados.
 
-buscarPorGenero([X|T],[Respuesta|L],P) :- 
-              (P=rating; P=popularidad), genero(Q), atom_string(X,Q),writeln(Q), 
-              findall((A,G), (generoAnime(A,G), member(Q,G)), Lista), orderBy(P, Sorted), 
-              filterByList(Sorted, Lista, Respuesta), printAnime(Respuesta), 
+buscarPorGenero([X|T],[Respuesta|L],P) :-
+              (P=rating; P=popularidad), genero(Q), atom_string(X,Q),writeln(Q),
+              findall((A,G), (generoAnime(A,G), member(Q,G)), Lista), orderBy(P, Sorted),
+              filterByList(Sorted, Lista, Respuesta), printAnime(Respuesta),
 							buscarPorGenero(T,L,P), !.
-buscarPorGenero([X|T],L,P) :- atom_string(X,Q),write('Lo siento no tengo información sobre '), 
+buscarPorGenero([X|T],L,P) :- atom_string(X,Q),write('Lo siento no tengo información sobre '),
               writeln(Q), buscarPorGenero(T,L,P).
 buscarPorGenero([],[],_).
 
@@ -116,7 +121,7 @@ buscarPorGenero([],[],_).
 %Dadas dos listas conformadas por tuplas (X,Y), intersecta las dos listas conservando el orden de la primera.
 filterByList([(X,Y)|T], L1, [(X,Y)|R]) :- member((X,_),L1), filterByList(T, L1, R), !.
 filterByList([_|T], L1, R) :- filterByList(T,L1,R).
-filterByList([], _, []).  
+filterByList([], _, []).
 
 %Dada una lista se introduce entre sus elementos <Elem> y retorna el string resultante
 unirCon(Entrada, Elem, String) :- atomic_list_concat(Entrada, Elem, Atom), atom_string(Atom, String).
@@ -126,19 +131,89 @@ calcularRatingPopularidad([(X,_)|T], [(X,S)|L]) :- popularidad(X,P), rating(X,R)
 calcularRatingPopularidad([],[]).
 
 buscarPorPopularidadRating(Rinf, Rsup, Pinf, Psup, Respuesta):-
-    base_de_datos(L), 
         findall(
-            ([N,R,P,_]), 
+            ([N,R,P,_]),
             (
-                member([N,R,P,_],L),
+                (anime(N), rating(N, R), popularidad(N, P)),
                 R@>=Rinf, R@<Rsup,
                 P@>=Pinf, P@<Psup
             ), Respuesta).
 
 %Dada una lista que contiene listas con 4 elementos, imprime los primeros 3 en formato de columnas
-printGrid(X):- format("~a~t~35| ~t~a~t~11+ ~t~a~t~11+~n",['Anime','Rating','Popularidad']),  printGridAux(X),!. 
+printGrid(X):- format("~a~t~35| ~t~a~t~11+ ~t~a~t~11+~n",['Anime','Rating','Popularidad']),  printGridAux(X),!.
 printGridAux([[N,R,P,_]|T]):- format("~a~t~35| ~t~a~t~11+ ~t~a~t~11+~n",[N,R,P]), printGridAux(T).
 printGridAux([]).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Predicados de utilidad %%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% leerRating: Predicado que unifica el rating dado por el usuario
+% cuando se le pregunta por los datos del anime que no existe
+%   Rating: Valor entre 1 y 5 dado por el usuario
+leerRating(Rating) :-
+    write('¿Que rating tiene? '),
+    readln(X),
+    (   X=[Rating],
+        member(Rating, [1, 2, 3, 4, 5])
+        % Se le termina de pedir input cuando ya el numero esta entre 1 y 5
+    ->  !
+        % El input valido debe estar entre 1 y 5, si no es asi se le pide input nuevamente
+    ;   writeln('El rating especificado no es valido, debe ser un numero entre 1 y 5'),
+        leerRating(Rating)
+    ).
+
+% leerPopularidad: Predicado que unifica la popularidad dada por el usuario
+% con el parametro dado. Si el input es omitido (se le da a enter sin haber
+% escrito nada) se le asigna una popularidad por defecto (1)
+leerPopularidad(Popularidad) :-
+    write('¿Que popularidad tiene? '),
+    readln(X),
+    (
+        X = []
+    ->  Popularidad is 1
+    ;   (
+            X = [Popularidad],
+            member(Popularidad, [1,2,3,4,5,6,7,8,9,10])
+            % Si se satisface nos regresamos felices
+        ->  !
+            % En caso contrario le indicamos en que se equivoco y luego volvemos a pedir todo
+        ;   writeln('La popularidad espeficiada no es valida, debe ser un numero'),
+            writeln(' entre 1 y 10; o vacio, espeficicando 1'),
+            leerPopularidad(Popularidad)
+        )
+    ).
+
+% anadirGeneros: Anade los generos a la base de datos de generos.
+anadirGeneros([]) :- !.
+anadirGeneros([Genero|ListaDeGeneros]) :-
+    atom_string(Genero, GeneroAtom),
+    assert(genero(GeneroAtom)), anadirGeneros(ListaDeGeneros).
+
+% generosToString: Recibe una lista de generos como atomos y las pasa a strings
+generosToString([], []) :- !.
+generosToString([Genero| ListaGeneros], [GeneroStr| ListaStr]) :-
+    atom_string(Genero, GeneroStr),
+    generosToString(ListaGeneros, ListaStr).
+
+
+% subirPopularidad: Predicado que sube la popularidad de un anime si su cantidad
+% de preguntas es igual a 5.
+subirPopularidad(Anime) :-
+    cantidadPreguntas(Anime, CantPreg),
+    retract(cantidadPreguntas(Anime, CantPreg)),
+    (   CantPreg<4
+    ->  NuevaCantPreg is CantPreg+1,
+        assert(cantidadPreguntas(Anime, NuevaCantPreg))
+    ;   assert(cantidadPreguntas(Anime, 0)),
+        popularidad(Anime, Popularidad),
+        (   Popularidad < 10
+        ->  NuevaPopularidad is Popularidad + 1,
+            retract(popularidad(Anime, Popularidad)),
+            assert(popularidad(Anime, NuevaPopularidad))
+            ; !
+            )
+    ).
 
 % Respuestas a preguntas definidas por el bot
 %Queries sobre rating
@@ -241,11 +316,47 @@ respuesta([muestrame, animes, de, X, por, Y, y, Z]) :-
     printAnime(Sorted).
 
 %Query sobre datos de un animes
-respuesta([conoces,sobre|X]) :- unirCon(X, ' ', Nombre), anime(Nombre), write('Si, esto es lo que se sobre '), 
-                                writeln(Nombre), base_de_datos(L), member([Nombre, R, P, G], L),
-                                write('Tiene rating '), write(R), write(', popularidad '), write(P),
-                                write(' y su genero entra en '), printListItems(G),!.
-respuesta([conoces,sobre|_]) :- writeln('Lo siento, aca es donde German te pregunta y agrega a la DB').
+respuesta([conoces, sobre|X]) :-
+    unirCon(X, ' ', Nombre),
+    anime(Nombre),
+    write('Si, esto es lo que se sobre '),
+    writeln(Nombre),
+    rating(Nombre, R),
+    popularidad(Nombre, P),
+    generoAnime(Nombre, G),
+    write('Tiene rating '),
+    write(R),
+    write(', popularidad '),
+    write(P),
+    write(' y su genero entra en '),
+    printListItems(G),
+    flush_output,
+    subirPopularidad(Nombre),
+    !.
+respuesta([conoces, sobre|X]) :-
+    unirCon(X, ' ', Nombre),
+    \+ anime(Nombre),
+    write('Lo siento, no conozco el anime: "'),
+    write(Nombre),
+    writeln('"'),
+    writeln('Pero si me das informacion adicional, lo puedo tomar en cuenta para la siguiente :)'),
+    nl,
+    write('¿X que generos pertenece el anime? '),
+    readln(Gen),
+    separarGeneros(Gen, Gen1),
+    leerRating(Rating),
+    leerPopularidad(Popularidad),
+    writeln(generosTo),
+    generosToString(Gen1, Generos),
+    writeln(generosTa),
+    anadirGeneros(Generos),
+    assert(anime(Nombre)),
+    assert(rating(Nombre, Rating)),
+    assert(generoAnime(Nombre, Generos)),
+    assert(popularidad(Nombre, Popularidad)),
+    assert(cantidadPreguntas(Nombre, 1)),
+    writeln('¡Perfecto! La proxima vez que preguntes ya sabre que responder').
+    % writeln('Lo siento, aca es donde German te pregunta y agrega a la DB').
 
 
 %Preguntas sobre popularidad Y rating especifico
@@ -257,7 +368,7 @@ respuesta([quiero,ver,un, anime| X]):-
         Pinf is 1, Psup is 3,
         buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
         printGrid(QR).
-        
+
 
 respuesta([quiero,ver,un, anime| X]):-
         (X=[interesante,y,poco,conocido];
@@ -299,7 +410,7 @@ respuesta([quiero,ver,un, anime| X]):-
         Pinf is 1, Psup is 3,
         buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
         printGrid(QR).
-        
+
 
 respuesta([quiero,ver,un, anime| X]):-
         (X=[normal,y,poco,conocido];
@@ -341,7 +452,7 @@ respuesta([quiero,ver,un, anime| X]):-
         Pinf is 1, Psup is 3,
         buscarPorPopularidadRating(Rinf,Rsup,Pinf,Psup,QR),
         printGrid(QR).
-        
+
 
 respuesta([quiero,ver,un, anime| X]):-
         (X=[aburrido,y,poco,conocido];
@@ -393,11 +504,17 @@ random:random_member(Respuesta,_) :-
     nth0(C, A, Respuesta).
 
 
-:- writeln("¡Hola! Mi nombre es Anibot").
-:- writeln("Se mucho sobre animes, pero puedo aprender por lo que me vayas pidiendo").
-:- writeln("¿Que necesitas?").
-:- prompt('|: ', '> ').
 
-:- leerRespuesta.
+:- dynamic cantidadPreguntas/2.
+:- dynamic popularidad/2.
+
+:- findall(X, anime(X), Animes),
+   inicializarCantidadPreguntas(Animes),
+   inicializarPopularidad(Animes),
+   writeln("¡Hola! Mi nombre es Anibot"),
+   writeln("Se mucho sobre animes, pero puedo aprender por lo que me vayas pidiendo"),
+   writeln("¿Que necesitas?"),
+   prompt('|: ', '> '),
+   leerRespuesta.
 
 
