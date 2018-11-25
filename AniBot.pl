@@ -148,15 +148,13 @@ printGridAux([]).
 leerRating(Rating) :-
     write('¿Que rating tiene? '),
     readln(X),
-    (   (   X=[]
-        ;   X=[RatingU|_], (\+length(X, 1);
-            \+ member(RatingU, [1, 2, 3, 4, 5]))
-        )
-        % El input valido debe estar entre 1 y 5, si no es asi se le pide input nuevamente
-    ->  writeln('El rating especificado no es valido, debe ser un numero entre 1 y 5'),
+    (   X=[Rating],
+        member(Rating, [1, 2, 3, 4, 5]))
         % Se le termina de pedir input cuando ya el numero esta entre 1 y 5
+    ->   !
+        % El input valido debe estar entre 1 y 5, si no es asi se le pide input nuevamente
+    ;   writeln('El rating especificado no es valido, debe ser un numero entre 1 y 5'),
         leerRating(Rating)
-    ;   X=[Rating]
     ).
 
 % Respuestas a preguntas definidas por el bot
