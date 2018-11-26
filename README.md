@@ -98,3 +98,55 @@ Aventura
  - Fairy Tail
  - Noragami
 ```
+
+### Preguntar por animes de un genero y ordenarlos
+
+AniBot puede ordenar los animes de un género en orden descenciente o ascendiente
+a partir del rating y la popularidad de cada uno. Para ello, debe preguntar de la
+siguiente forma:
+
+_muestrame animes de <genero> por popularidad_
+_muestrame animes de <genero> por rating_
+_muestrame animes de <genero> por popularidad y rating_
+_muestrame animes de <genero> por rating y popularidad_
+
+Se le puede añadir al final _creciente_ o _decreciente_ para especificar el orden.
+Por defecto es _decreciente_. En caso de que se pregunte tanto por rating como por
+popularidad, se suma ambas y se ordena el resultado.
+
+#### Ejemplos
+```
+> muestrame animes de Shounen por rating
+
+Shounen
+ - Attack on Titan
+ - Code Geass
+ - Bleach
+ - Full Metal Alchemist : Brotherhood
+ - Dragon Ball
+ - Akame ga Kill!
+ - Noragami
+ - Naruto
+> muestrame animes de Shounen por popularidad
+
+Shounen
+ - Attack on Titan
+ - Code Geass
+ - Bleach
+ - Dragon Ball
+ - Akame ga Kill!
+ - Noragami
+ - Naruto
+ - Full Metal Alchemist : Brotherhood
+> muestrame animes de Shounen por rating y popularidad
+
+Shounen
+ - Attack on Titan
+ - Code Geass
+ - Bleach
+ - Dragon Ball
+ - Akame ga Kill!
+ - Noragami
+ - Naruto
+ - Full Metal Alchemist : Brotherhood
+```
