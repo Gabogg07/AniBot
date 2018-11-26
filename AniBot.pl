@@ -2,7 +2,8 @@
     @descr Anibot.pl
             Código fuente de Anibot, bot que interactua con el usuario respondiendo ciertas preguntas
             asociadas a animes.
-    @author German Robayo y Gabriel Gutierrez
+    @author German Robayo     14-10924 
+            Gabriel Gutierrez 13-10625
     @date Noviembre de 2018
 */
 
