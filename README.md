@@ -228,3 +228,99 @@ Listado de animes muy poco conocidos:
  - Full Metal Alchemist : Brotherhood
 ```
 (no me cuadra que Full Metal Alchemist sea muy poco conocido, pero ok).
+
+### Preguntar por un anime específico
+
+Anibot te puede dar detalles sobre un anime en específico, para ello
+debes preguntarle lo siguiente:
+
+_conoces sobre <anime>_
+
+_Nota_: El anime puede ser cualquier cadena separada por espacios, pero
+si el título del anime contiene caracteres especiales (.:*!?) debera espaciarlos.
+Ejemplo: Akame ga Kill !
+
+Anibot buscará en la base de datos del conocimiento un anime con ese nombre.
+Pueden ocurrir los siguientes dos casos:
+
+#### Lo consigue
+
+En este caso AniBot te va a dar todos los detalles
+que conozca sobre el anime
+
+##### Ejemplo
+
+```
+> conoces sobre Dragon Ball
+
+Si, esto es lo que se sobre Dragon Ball
+Tiene rating 3, popularidad 7 y su genero entra en Shounen, Aventura
+> conoces sobre Naruto
+
+Si, esto es lo que se sobre Naruto
+Tiene rating 1, popularidad 5 y su genero entra en Shounen
+> conoces sobre Akame ga Kill !
+
+Si, esto es lo que se sobre Akame ga Kill !
+Tiene rating 3, popularidad 7 y su genero entra en Accion, Drama, Fantasia, Shounen
+```
+
+#### No lo consigue
+
+¡AniBot puede aprender sobre tu anime! En caso de que no consiga tu anime en
+la KD (Knowledge Database), te pedira los datos del mismo
+para guardarlo. La popularidad es opcional, si no se especifica se deja en 1.
+
+##### Ejemplo
+
+```
+> conoces sobre Mi Anime desconocido
+
+Lo siento, no conozco el anime: "Mi Anime desconocido"
+Pero si me das informacion adicional, lo puedo tomar en cuenta para la siguiente :)
+
+¿X que generos pertenece el anime? Shounen, la Aventura, Fantasia y Comedia
+¿Que rating tiene? 3
+¿Que popularidad tiene?
+¡Perfecto! La proxima vez que preguntes ya sabre que responder
+> conoces sobre Mi Anime desconocido
+
+Si, esto es lo que se sobre Mi Anime desconocido
+Tiene rating 3, popularidad 1 y su genero entra en Shounen, Aventura, Fantasia, Comedia
+>
+```
+### Preguntas recurrentes sobre animes
+
+Cuando anibot se da cuenta que han preguntado más de 5 veces por un anime en
+particular, este le sube la popularidad automáticamente.
+
+#### Ejemplo
+```
+> conoces sobre Dragon Ball
+
+Si, esto es lo que se sobre Dragon Ball
+Tiene rating 3, popularidad 7 y su genero entra en Shounen, Aventura
+> conoces sobre Dragon Ball
+
+Si, esto es lo que se sobre Dragon Ball
+Tiene rating 3, popularidad 7 y su genero entra en Shounen, Aventura
+> conoces sobre Dragon Ball
+
+Si, esto es lo que se sobre Dragon Ball
+Tiene rating 3, popularidad 7 y su genero entra en Shounen, Aventura
+> conoces sobre Dragon Ball
+
+Si, esto es lo que se sobre Dragon Ball
+Tiene rating 3, popularidad 7 y su genero entra en Shounen, Aventura
+> conoces sobre Dragon Ball
+
+Si, esto es lo que se sobre Dragon Ball
+Tiene rating 3, popularidad 7 y su genero entra en Shounen, Aventura
+> conoces sobre Dragon Ball
+
+Si, esto es lo que se sobre Dragon Ball
+Tiene rating 3, popularidad 8 y su genero entra en Shounen, Aventura
+```
+
+No tienen que ser preguntas sucesivas, anibot mantiene su base de datos para
+la cantidad de preguntas que lleva cada anime.
