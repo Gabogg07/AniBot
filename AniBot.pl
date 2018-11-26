@@ -735,6 +735,7 @@ respuesta([quiero,ver,un, anime| X]):-
 
 % predicado para detener la ejecucon de anibot
 respuesta([salir]) :-
+    writeln('Espero que hayas pasado un rato agradable :)'),
     halt.
 
 % caso default, en caso de no conocer la respuesta anibot da una 
