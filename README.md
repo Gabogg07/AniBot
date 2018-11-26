@@ -150,3 +150,51 @@ Shounen
  - Naruto
  - Full Metal Alchemist : Brotherhood
 ```
+
+### Filtrar por valor de rating y popularidad
+
+Sea categoria entendida como:
+- interesante -- rating entre 4 y 5
+- normal      -- rating igual a 3
+- aburrido    -- rating entre 1 y 2
+
+popularidad como:
+- muy poco conocido -- popularidad entre 1 y 2
+- poco conocido     -- popularidad entre 3 y 5
+- conocido          -- popularidad entre 6 y 7
+- muy conocido      -- popularidad entre 8 y 9
+- bastante conocido -- popularidad igual a 10
+
+y no se puede usar categoria o popularidad en ambos casos. Si quiero preguntar
+por animes con ciertos valores de popularidad y rating, se procede de la siguiente manera:
+
+_quiero ver un anime <categoria|popularidad> y <categoria|popularidad>_
+
+#### Ejemplos
+```
+> quiero ver un anime interesante y bastante conocido
+
+Anime                                 Rating   Popularidad
+Death Note                              4          10
+Attack on Titan                         5          10
+Code Geass                              5          10
+One Punch Man                           5          10
+Pokemon                                 5          10
+> quiero ver un anime aburrido y bastante conocido
+
+Anime                                 Rating   Popularidad
+Hamtaro                                 2          10
+> quiero ver un anime interesante y muy poco conocido
+
+Anime                                 Rating   Popularidad
+Full Metal Alchemist : Brotherhood      4          1
+> quiero ver un anime aburrido y muy poco conocido
+
+Anime                                 Rating   Popularidad
+> quiero ver un anime normal y conocido
+
+Anime                                 Rating   Popularidad
+Dragon Ball                             3          7
+Akame ga Kill!                          3          7
+Noragami                                3          6
+```
