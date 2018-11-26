@@ -361,6 +361,8 @@ subirPopularidad(Anime) :-
 
 %%%%%%%%%%%%%%% Queries sobre rating %%%%%%%%%%%%%%%%%%%
 
+%%%%%% Rating para todos los generos %%%%%
+
 % cuales son los mejores rating?
 respuesta([cuales, son, los, mejores, rating, ?]) :-
     findall((X, _), rating(X, 5), List),
@@ -384,6 +386,44 @@ respuesta([que, animes, tienen, rating, Q, ?]) :-
 % caso cuando el rating no esta entre 1 y 5
 respuesta([que, animes, tienen, rating, _, ?]) :-
     writeln("Disculpa, pero solo me han hablado de ratings entre 1 y 5. Intenta con uno de estos valores.").
+
+%%%%%% Rating para un genero los generos %%%%%
+
+% cuales son los mejores rating?
+respuesta([cuales, son, los, mejores, rating, del, genero, G0, ?]) :-
+    atom_string(G0,G),
+    genero(G),
+    findall((X, _), (rating(X, 5), generoAnime(X,Generos), member(G,Generos)), List),
+    writeln("Listado de animes con rating 5: "),
+    printAnime(List).
+
+% cuales son los peores rating del genero G
+respuesta([cuales, son, los, peores, rating, del, genero, G0, ?]) :-
+    atom_string(G0,G),
+    genero(G),
+    findall((X, _), (rating(X, 1), generoAnime(X,Generos), member(G,Generos)), List),
+    writeln("Listado de animes con rating 1: "),
+    printAnime(List).
+
+% que animes del genero <genero> tienen rating X ?
+respuesta([que, animes, del, genero, G0, tienen, rating, Q, ?]) :-
+    checkRange(Q, 5),
+    atom_string(G0,G),
+    genero(G),
+    findall((X, _), (rating(X, Q), generoAnime(X,Generos), member(G,Generos)), List),
+    atom_concat("Listado de animes con rating ", Q, Salida),
+    writeln(Salida),
+    printAnime(List).
+
+% caso cuando el rating no esta entre 1 y 5 o el genero es incorrecto
+respuesta([cuales, son, los, peores, rating, del, genero, _, ?]):-
+    writeln("Asegurate que el genero sea conocido.").
+
+respuesta([cuales, son, los, mejores, rating, del, genero, _, ?]):-
+    writeln("Asegurate que el genero sea conocido. ").
+
+respuesta([que, animes, del, genero, _, tienen, rating, _, ?]) :-
+    writeln("Asegurate que el rating esta entre 1 y 5 y que el genero sea conocido. Intenta con uno de estos valores.").
 
 %%%%%%%%%%%%%%% Queries sobre popularidad %%%%%%%%%%%%%%%%%%%
 
@@ -733,5 +773,4 @@ random:random_member(Respuesta,_) :-
    writeln("¿Que necesitas?"),
    prompt('|: ', '> '),
    leerRespuesta.
-
 
