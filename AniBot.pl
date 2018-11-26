@@ -31,7 +31,7 @@ base_de_datos([
     ["Fairy Tail", 3, 8, ["Magia", "Accion", "Aventura"]],
     ["One Piece", 4, 7, ["Aventura", "Accion"]],
     ["One Punch Man", 5, 10, ["Comedia", "Accion", "Sci-Fi", "Sobrenatural"]],
-    ["Akame ga Kill!", 3, 7, ["Accion", "Drama", "Fantasia", "Shounen"]],
+    ["Akame ga Kill !", 3, 7, ["Accion", "Drama", "Fantasia", "Shounen"]],
     ["Pokemon", 5, 10, ["Comedia", "Accion", "Fantasia", "Aventura"]],
     ["Noragami", 3, 6, ["Aventura", "Accion", "Fantasia", "Shounen"]],
     ["Ao no Exorcist", 2, 5, ["Mystery", "Drama"]]
