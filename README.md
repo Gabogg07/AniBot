@@ -199,6 +199,48 @@ Akame ga Kill!                          3          7
 Noragami                                3          6
 ```
 
+### Filtrar solamente por rating (y genero)
+
+AniBot puede filtrar por un valor especifico de rating y genero (este ultimo
+opcional). Para hacerlo, se le pregunta lo siguiente:
+
+_cuales son los mejores rating?_
+_cuales son los peores rating?_
+_que animes tienen rating <rating>?_
+_que animes del genero <genero> tienen rating <rating>?_
+_cuales son los mejores rating del genero <genero>?_
+_cuales son los peores rating del genero <genero>?_
+
+donde <rating> es un numero del 1 al 5 y genero es una palabra sin espacios.
+
+#### Ejemplos
+
+```
+> que animes tienen rating 7?
+
+Disculpa, pero solo me han hablado de ratings entre 1 y 5. Intenta con uno de estos valores.
+> que animes tienen rating 5?
+
+Listado de animes con rating 5
+ - HunterXHunter
+ - Attack on Titan
+ - Code Geass
+ - One Punch Man
+ - Pokemon
+> cuales son los mejores rating?
+
+Listado de animes con rating 5:
+ - HunterXHunter
+ - Attack on Titan
+ - Code Geass
+ - One Punch Man
+ - Pokemon
+> cuales son los peores rating?
+
+Listado de animes con rating 1:
+ - Naruto
+ ```
+
 ### Filtrar solamente por popularidad
 
 Se le puede preguntar fácilmente animes con cierta popularidad:
@@ -324,3 +366,12 @@ Tiene rating 3, popularidad 8 y su genero entra en Shounen, Aventura
 
 No tienen que ser preguntas sucesivas, anibot mantiene su base de datos para
 la cantidad de preguntas que lleva cada anime.
+
+### Como salir del bot
+
+Para despedirse del bot, solo hay que escribir _salir_
+```
+> salir
+
+Espero que hayas pasado un rato agradable :)
+```
