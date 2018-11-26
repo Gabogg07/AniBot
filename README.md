@@ -239,6 +239,10 @@ Listado de animes con rating 5:
 
 Listado de animes con rating 1:
  - Naruto
+> que animes del genero Shounen tienen rating 1?
+
+Listado de animes con rating 1
+ - Naruto
  ```
 
 ### Filtrar solamente por popularidad
