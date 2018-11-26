@@ -198,3 +198,33 @@ Dragon Ball                             3          7
 Akame ga Kill!                          3          7
 Noragami                                3          6
 ```
+
+### Filtrar solamente por popularidad
+
+Se le puede preguntar fácilmente animes con cierta popularidad:
+
+_cuales son los mas populares?_
+_cuales son los menos populares?_
+_que animes son poco conocidos?_
+_que animes son conocidos?_
+_que animes son muy conocidos?_
+
+El significado de cada frase es análogo al de la sección _Filtrar por valor de rating y popularidad_.
+
+#### Ejemplos
+```
+> cuales son los mas populares?
+
+Listado de animes bastante conocidos:
+ - Hamtaro
+ - Death Note
+ - Attack on Titan
+ - Code Geass
+ - One Punch Man
+ - Pokemon
+> cuales son los menos populares?
+
+Listado de animes muy poco conocidos:
+ - Full Metal Alchemist : Brotherhood
+```
+(no me cuadra que Full Metal Alchemist sea muy poco conocido, pero ok).
